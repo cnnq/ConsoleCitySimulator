@@ -1,6 +1,6 @@
-package Other;
+package other;
 
-import Layers.Renderable;
+import layers.Renderable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -67,15 +67,10 @@ public class Screen {
     private void clear() {
         System.out.println(); // for IDE
 
-        if (isWindows) {
-            try {
-                processBuilder.start().waitFor();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+        try {
+            processBuilder.start().waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

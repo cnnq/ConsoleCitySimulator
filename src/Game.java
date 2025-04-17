@@ -1,5 +1,5 @@
-import Layers.TerrainLayer;
-import Other.Screen;
+import layers.TerrainLayer;
+import other.Screen;
 
 public class Game {
 
@@ -16,7 +16,7 @@ public class Game {
         this.FPS = DEFAULT_FPS;
         screen = new Screen(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-        terrain = new TerrainLayer(200, 200);
+        terrain = new TerrainLayer(200, 200, 10, 32);
     }
 
     public void run() {
@@ -39,7 +39,9 @@ public class Game {
             // wait
             try {
                 Thread.sleep((targetNanos - currentTime + lastTime) / 1_000_000);
-            } catch (InterruptedException e) { }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             lastTime += targetNanos;
         }

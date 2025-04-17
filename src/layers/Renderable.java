@@ -1,6 +1,6 @@
-package Layers;
+package layers;
 
-import Other.Screen;
+import other.Screen;
 import org.jetbrains.annotations.NotNull;
 
 public interface Renderable {
