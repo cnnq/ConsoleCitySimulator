@@ -1,38 +1,70 @@
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 import layers.TerrainLayer;
-import other.Screen;
+
+import java.io.IOException;
 
 public class Game {
 
     private static final int DEFAULT_WIDTH = 120;
-    private static final int DEFAULT_HEIGHT = 28;
+    private static final int DEFAULT_HEIGHT = 40;
     private static final int DEFAULT_FPS = 1;
 
-    private final Screen screen;
-    private final int FPS;
+    private Screen screen;
 
     private TerrainLayer terrain;
 
     public Game() {
-        this.FPS = DEFAULT_FPS;
-        screen = new Screen(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+        try {
+            screen = new DefaultTerminalFactory()
+                    .setInitialTerminalSize(new TerminalSize(DEFAULT_WIDTH, DEFAULT_HEIGHT))
+                    .setTerminalEmulatorFrameAutoCloseTrigger(TerminalEmulatorAutoCloseTrigger.CloseOnEscape)
+                    .createScreen();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         terrain = new TerrainLayer(200, 200, 10, 32);
     }
 
+    /**
+     * Run game
+     */
     public void run() {
-        final int targetNanos = 1_000_000_000 / FPS;
+        final int targetNanos = 1_000_000_000 / DEFAULT_FPS;
         boolean running = true;
+
+        // start
+        try {
+            screen.startScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         long lastTime = System.nanoTime();
 
+        // run
         while (running) {
 
             // update
-            // render
-            screen.render(terrain);
 
-            // draw
-            screen.draw();
+            try {
+
+                screen.doResizeIfNecessary();
+
+                // render
+                terrain.render(screen);
+
+                // display
+                screen.refresh();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             long currentTime = System.nanoTime();
 
@@ -44,6 +76,13 @@ public class Game {
             }
 
             lastTime += targetNanos;
+        }
+
+        // stop
+        try {
+            screen.stopScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

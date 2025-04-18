@@ -1,6 +1,8 @@
 package layers;
 
-import other.Screen;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.screen.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import other.PerlinNoise;
@@ -42,9 +44,13 @@ public class TerrainLayer extends Layer {
     }
 
     @Override
-    public void render(@NotNull Screen screen, char[][] screenBuffer) {
-        for (int y = 0; y < screen.getHeight(); y++) {
-            if (screen.getWidth() >= 0) System.arraycopy(buffer[y], 0, screenBuffer[y], 0, screen.getWidth());
+    public void render(@NotNull Screen screen) {
+        TerminalSize size = screen.getTerminalSize();
+
+        for (int y = 0; y < size.getRows(); y++) {
+            for (int x = 0; x < size.getColumns(); x++) {
+                screen.setCharacter(x, y, new TextCharacter(get(x, y)));
+            }
         }
     }
 }
