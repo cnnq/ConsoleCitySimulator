@@ -2,45 +2,24 @@ package layers;
 
 import org.jetbrains.annotations.Range;
 
-import static java.lang.Integer.MAX_VALUE;
-
-public abstract class Layer implements Renderable {
-
-    private final int width;
-    private final int height;
-    protected char[][] buffer;
-
-    public Layer(@Range(from = 0, to = MAX_VALUE) int width, @Range(from = 0, to = MAX_VALUE) int height) {
-        this.width = width;
-        this.height = height;
-        buffer = new char[height][width];
-    }
+public interface Layer<T> {
 
     /**
-     * Get char from buffer at (x, y) coordinates
-     * @param x
-     * @param y
-     * @return
+     * Get T from buffer at (x, y) coordinates
+     * @param x coord
+     * @param y coord
+     * @return T
      */
-    public char get(int x, int y) {
-        return buffer[y][x];
-    }
+    T get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y);
 
     /**
-     * Set char at buffer at (x, y) coordinates
-     * @param x
-     * @param y
-     * @return
+     * Set T at buffer at (x, y) coordinates
+     * @param x coord
+     * @param y coord
      */
-    public void set(int x, int y, char value) {
-        buffer[y][x] = value;
-    }
+    void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T value);
 
-    public int getWidth() {
-        return width;
-    }
+    int getWidth();
 
-    public int getHeight() {
-        return height;
-    }
+    int getHeight();
 }
