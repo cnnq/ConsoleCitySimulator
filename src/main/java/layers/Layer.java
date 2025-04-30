@@ -2,6 +2,8 @@ package layers;
 
 import org.jetbrains.annotations.Range;
 
+import java.awt.*;
+
 public interface Layer<T> {
 
     /**
@@ -18,6 +20,11 @@ public interface Layer<T> {
      * @param y coord
      */
     void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T value);
+
+    /**
+     * Draws current layer
+     */
+    void draw(Graphics g);
 
     int getWidth();
 

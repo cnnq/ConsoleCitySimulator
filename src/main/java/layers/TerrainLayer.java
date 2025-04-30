@@ -1,14 +1,13 @@
 package layers;
 
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.screen.Screen;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import other.PerlinNoise;
 
-public class TerrainLayer implements Layer<TerrainType>, Renderable {
+import java.awt.*;
+
+public class TerrainLayer implements Layer<TerrainType> {
+
+    public static final int TILE_SIZE = 8;
 
     private final int width;
     private final int height;
@@ -38,8 +37,8 @@ public class TerrainLayer implements Layer<TerrainType>, Renderable {
             for (int x = 0; x < width; x++) {
 
                 double h = 0;
-                h += noise1.getNoiseAt((double)x / cellSize, (double)y * 2 / cellSize);
-                h += noise2.getNoiseAt((double)x * 2 / cellSize, (double)y * 2 * 2 / cellSize);
+                h += noise1.getNoiseAt((double)x / cellSize, (double)y / cellSize);
+                h += noise2.getNoiseAt((double)x * 2 / cellSize, (double)y * 2 / cellSize);
                 h /= 2;
 
                 if (h < 0.27) {
@@ -55,24 +54,20 @@ public class TerrainLayer implements Layer<TerrainType>, Renderable {
         }
     }
 
-    @Override
-    public void render(@NotNull Screen screen) {
-        TerminalSize size = screen.getTerminalSize();
+    public void draw(Graphics g) {
 
-        for (int y = 0; y < size.getRows(); y++) {
-            for (int x = 0; x < size.getColumns(); x++) {
-                TextGraphics textGraphics = screen.newTextGraphics();
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
 
-                TextColor color = switch (get(x, y)) {
-                    case DEEP_WATER -> TextColor.ANSI.BLUE;
-                    case WATER -> TextColor.ANSI.BLUE_BRIGHT;
-                    case GRASS -> TextColor.ANSI.GREEN_BRIGHT;
-                    case STONE -> TextColor.ANSI.BLACK_BRIGHT;
-                    default -> TextColor.ANSI.DEFAULT;
+                Color color = switch (get(x, y)) {
+                    case DEEP_WATER -> Color.BLUE;
+                    case WATER -> Color.CYAN;
+                    case GRASS, BUILDING -> Color.GREEN;
+                    case STONE -> Color.GRAY;
                 };
 
-                textGraphics.setBackgroundColor(color);
-                textGraphics.setCharacter(x, y, ' ');
+                g.setColor(color);
+                g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
     }

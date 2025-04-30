@@ -1,6 +1,11 @@
+import other.Game;
+
+import java.awt.*;
+
 public class Main {
     public static void main(String[] args) {
-        Game game = new Game();
-        game.run();
+
+        EventQueue.invokeLater(new Game());
+
     }
 }

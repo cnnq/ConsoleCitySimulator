@@ -4,5 +4,6 @@ public enum TerrainType {
     DEEP_WATER,
     WATER,
     GRASS,
-    STONE
+    STONE,
+    BUILDING
 }
