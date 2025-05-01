@@ -62,8 +62,9 @@ public class TerrainLayer implements Layer<TerrainType> {
                 Color color = switch (get(x, y)) {
                     case DEEP_WATER -> Color.BLUE;
                     case WATER -> Color.CYAN;
-                    case GRASS, BUILDING -> Color.GREEN;
+                    case GRASS -> Color.GREEN;
                     case STONE -> Color.GRAY;
+                    case BUILDING -> Color.BLACK;
                 };
 
                 g.setColor(color);

@@ -14,7 +14,7 @@ public class MapPanel extends JPanel {
 
 
     public MapPanel() {
-        setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT - 80));
+        setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT - 200));
 
         terrain = new TerrainLayer(200, 200, 10, 32);
     }
@@ -25,5 +25,9 @@ public class MapPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         terrain.draw(g);
+    }
+
+    public TerrainLayer getTerrain() {
+        return terrain;
     }
 }
