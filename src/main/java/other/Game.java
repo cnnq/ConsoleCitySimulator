@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class Game extends JFrame implements Runnable {
 
-    public static final int DEFAULT_WIDTH = 600;
-    public static final int DEFAULT_HEIGHT = 600;
+    public static final int DEFAULT_WIDTH = 512;
+    public static final int DEFAULT_HEIGHT = 512;
     public static final int DEFAULT_FPS = 20;
 
     // Use changeGameMode() method to change
@@ -23,7 +23,6 @@ public class Game extends JFrame implements Runnable {
 
     public Game() {
         super("Game");
-        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         running = true;
@@ -53,7 +52,9 @@ public class Game extends JFrame implements Runnable {
 
             // wait
             try {
-                Thread.sleep((targetNanos - currentTime + lastTime) / 1_000_000);
+                long timeToWait = (targetNanos - currentTime + lastTime) / 1_000_000;
+                if (timeToWait > 0) Thread.sleep(timeToWait);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 running = false;
@@ -74,5 +75,6 @@ public class Game extends JFrame implements Runnable {
     private void changeGameMode(@NotNull GameMode newGameMode) {
         gameMode = newGameMode;
         setContentPane(newGameMode.getContentPane());
+        pack();
     }
 }

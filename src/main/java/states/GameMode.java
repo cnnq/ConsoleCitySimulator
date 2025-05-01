@@ -3,11 +3,8 @@ package states;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
-public abstract class GameMode implements KeyListener, MouseListener, MouseMotionListener {
+public abstract class GameMode {
 
     private Container contentPane;
 
