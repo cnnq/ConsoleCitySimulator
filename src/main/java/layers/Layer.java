@@ -23,8 +23,12 @@ public interface Layer<T> {
 
     /**
      * Draws current layer
+     * @param xOffset x layer coordinate from which start drawing
+     * @param yOffset y layer coordinate from which start drawing
+     * @param width width of target image
+     * @param height height of target image
      */
-    void draw(Graphics g);
+    void draw(Graphics g, int xOffset, int yOffset, int width, int height);
 
     int getWidth();
 

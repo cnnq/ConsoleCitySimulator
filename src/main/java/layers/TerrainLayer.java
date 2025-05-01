@@ -31,7 +31,7 @@ public class TerrainLayer implements Layer<TerrainType> {
 
         // Generate terrain
         PerlinNoise noise1 = new PerlinNoise(seed);
-        PerlinNoise noise2 = new PerlinNoise(seed + 3);
+        PerlinNoise noise2 = new PerlinNoise(seed ^ 5769574);
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -54,12 +54,19 @@ public class TerrainLayer implements Layer<TerrainType> {
         }
     }
 
-    public void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g, int xOffset, int yOffset, int width, int height) {
 
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
+        int minX = Math.max(0, -xOffset);
+        int minY = Math.max(0, -yOffset);
 
-                Color color = switch (get(x, y)) {
+        int maxX = Math.min(width, this.width - xOffset);
+        int maxY = Math.min(height, this.height - yOffset);
+
+        for (int y = minY; y < maxY; y++) {
+            for (int x = minX; x < maxX; x++) {
+
+                Color color = switch (get(x + xOffset, y + yOffset)) {
                     case DEEP_WATER -> Color.BLUE;
                     case WATER -> Color.CYAN;
                     case GRASS -> Color.GREEN;
