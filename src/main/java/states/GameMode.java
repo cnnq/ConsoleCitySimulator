@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
+/**
+ * Defines how information will be displayed and how input should be processed.
+ */
 public abstract class GameMode {
 
     private Container contentPane;

@@ -1,16 +1,17 @@
 package states;
 
 import other.Game;
-import other.MapPanel;
+import gui.MapPanel;
+import gui.TopBar;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class EditMode extends GameMode {
 
-    private static final int TOP_BAR_HEIGHT = 32;
     private static final int BOTTOM_BAR_HEIGHT = 32;
 
+    private final TopBar topBar;
     private final MapPanel map;
 
 
@@ -24,17 +25,14 @@ public class EditMode extends GameMode {
 
         container.setLayout(layout);
 
-        JLabel top = new JLabel("Top", JLabel.CENTER);
-        top.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        top.setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, TOP_BAR_HEIGHT));
-
+        topBar = new TopBar();
         map = new MapPanel();
 
         JLabel bottom = new JLabel("Bottom", JLabel.CENTER);
         bottom.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         bottom.setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, BOTTOM_BAR_HEIGHT));
 
-        container.add(top);
+        container.add(topBar);
         container.add(map);
         container.add(bottom);
 

@@ -2,15 +2,18 @@ package other;
 
 import java.util.Random;
 
+/**
+ * Pseudo-random gradient noise generator
+ */
 public class PerlinNoise {
 
     private final int[] permutation;
 
     /**
      * Set perlin noise permutation table for given seed
-     * @param seed
+     * @param seed number from which noise will be generated
      */
-    public PerlinNoise(int seed) {
+    public PerlinNoise(long seed) {
         permutation = new int[512];
 
         Random rand = new Random(seed);
@@ -38,8 +41,8 @@ public class PerlinNoise {
     /**
      * Gives noise value at (x, y) point.
      * Integer x, y values exist on cell edges.
-     * @param x
-     * @param y
+     * @param x coordinate
+     * @param y coordinate
      * @return Value between 0 and 1
      */
     public double getNoiseAt(double x, double y) {

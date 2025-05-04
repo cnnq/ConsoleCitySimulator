@@ -7,6 +7,9 @@ import states.GameMode;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Instance of one game session
+ */
 public class Game extends JFrame implements Runnable {
 
     public static final int DEFAULT_WIDTH = 512;
@@ -46,6 +49,8 @@ public class Game extends JFrame implements Runnable {
 
         // run
         while (running) {
+
+            GameState.update(1f / DEFAULT_FPS);
             repaint();
 
             long currentTime = System.nanoTime();
