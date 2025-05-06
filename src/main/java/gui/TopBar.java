@@ -23,7 +23,7 @@ public class TopBar extends JMenuBar {
 
     @Override
     public void paint(Graphics g) {
-        moneyLabel.setText("Money: " + Double.toString(Math.round(GameState.getMoney())));
+        moneyLabel.setText("Money: " + Double.toString(Math.round(GameState.getMoney())) + "k $");
         super.paint(g);
     }
 }
