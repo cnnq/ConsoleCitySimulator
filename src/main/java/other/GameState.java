@@ -43,9 +43,9 @@ public class GameState {
                 // Build house if close to road
                 if (terrain.get(x, y) == TerrainType.HOUSING_AREA) {
                     if (x > 0 && terrain.get(x - 1, y) == TerrainType.ROAD ||
-                        x < terrain.getWidth() && terrain.get(x + 1, y) == TerrainType.ROAD ||
+                        x + 1 < terrain.getWidth() && terrain.get(x + 1, y) == TerrainType.ROAD ||
                         y > 0 && terrain.get(x, y - 1) == TerrainType.ROAD ||
-                        y < terrain.getHeight() && terrain.get(x, y + 1) == TerrainType.ROAD) {
+                        y + 1 < terrain.getHeight() && terrain.get(x, y + 1) == TerrainType.ROAD) {
 
                         terrain.set(x, y, TerrainType.HOUSE);
                     }

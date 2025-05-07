@@ -41,7 +41,7 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        terrain.draw(g, xOffset, yOffset, getWidth(), getHeight());
+        terrain.draw(g, xOffset, yOffset, getWidth() / GameState.TILE_SIZE, getHeight() / GameState.TILE_SIZE);
 
         if (selectionFrom != null && selectionTo != null) {
             g.setColor(Color.BLUE);

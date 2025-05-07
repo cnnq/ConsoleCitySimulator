@@ -77,8 +77,8 @@ public interface Layer<T> {
 
     /**
      * Draws current layer
-     * @param xOffset x layer coordinate from which start drawing
-     * @param yOffset y layer coordinate from which start drawing
+     * @param xOffset x coordinate
+     * @param yOffset y coordinate
      * @param width width of target image
      * @param height height of target image
      */

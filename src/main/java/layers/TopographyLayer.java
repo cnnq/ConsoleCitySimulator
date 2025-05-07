@@ -72,40 +72,60 @@ public class TopographyLayer implements Layer<Double> {
 
     @Override
     public void draw(Graphics g, int xOffset, int yOffset, int width, int height) {
-        int minX = Math.max(0, -xOffset);
-        int minY = Math.max(0, -yOffset);
 
-        int maxX = Math.min(width, this.width - xOffset);
-        int maxY = Math.min(height, this.height - yOffset);
+        // Clamp to not draw out of bounds
+        int minX = Math.max(-1, -xOffset);
+        int minY = Math.max(-1, -yOffset);
 
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                double h = get(x + xOffset, y + yOffset);
+        int maxX = Math.min(width, this.width - xOffset - 1);
+        int maxY = Math.min(height, this.height - yOffset - 1);
 
-                Color color;
+        for (int displayedTileX = minX; displayedTileX < maxX; displayedTileX++) {
+            for (int displayedTileY = minY; displayedTileY < maxY; displayedTileY++) {
 
-                if (h <= waterLevel) {
-                    // land
-                    final Color deepWater = new Color(0, 23,61);
-                    final Color shallowWater = new Color(32, 131,240);
+                int tileX = displayedTileX + xOffset;
+                int tileY = displayedTileY + yOffset;
 
-                    color = mix(deepWater, shallowWater, (h / waterLevel) * (h / waterLevel));
-                } else {
-                    // water
-                    final Color lowLand = new Color(90, 220,22);
-                    final Color highLand = new Color(22, 47, 13);
+                // Interpolate color
+                Color color00 = getColor(get(tileX, tileY));
+                Color color01 = getColor(get(tileX, tileY + 1));
+                Color color10 = getColor(get(tileX + 1, tileY));
+                Color color11 = getColor(get(tileX + 1, tileY + 1));
 
-                    color = mix(lowLand, highLand, (h - waterLevel) / (1 - waterLevel));
+                for (int x = 0; x < GameState.TILE_SIZE; x++) {
+                    Color color0 = mix(color00, color10, (double)x / GameState.TILE_SIZE);
+                    Color color1 = mix(color01, color11, (double)x / GameState.TILE_SIZE);
+
+                    for (int y = 0; y < GameState.TILE_SIZE; y++) {
+                        Color color = mix(color0, color1, (double)y / GameState.TILE_SIZE);
+
+                        g.setColor(color);
+                        g.fillRect(displayedTileX * GameState.TILE_SIZE + GameState.TILE_SIZE / 2 + x, displayedTileY * GameState.TILE_SIZE + GameState.TILE_SIZE / 2 + y, 1, 1);
+                    }
                 }
-
-                g.setColor(color);
-                g.fillRect(x * GameState.TILE_SIZE, y * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
             }
         }
     }
 
+    private Color getColor(double h) {
+        if (h <= waterLevel) {
+            // land
+            final Color deepWater = new Color(0, 23,61);
+            final Color shallowWater = new Color(32, 131,240);
+
+            return mix(deepWater, shallowWater, (h / waterLevel) * (h / waterLevel));
+
+        } else {
+            // water
+            final Color lowLand = new Color(90, 220,22);
+            final Color highLand = new Color(22, 47, 13);
+
+            return mix(lowLand, highLand, (h - waterLevel) / (1 - waterLevel));
+        }
+    }
+
     private static Color mix(Color a, Color b, double t) {
-        return new Color((int)(a.getRed() * (1 - t) + b.getRed() * t), (int)(a.getGreen() * (1 - t) + b.getGreen() * t), (int)(a.getBlue() * (1 - t) + b.getBlue() * t));
+        return new Color((int)(a.getRed() * (1.0 - t) + b.getRed() * t), (int)(a.getGreen() * (1.0 - t) + b.getGreen() * t), (int)(a.getBlue() * (1.0 - t) + b.getBlue() * t));
     }
 
     @Override
