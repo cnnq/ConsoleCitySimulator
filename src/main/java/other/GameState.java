@@ -1,6 +1,6 @@
 package other;
 
-import layers.TerrainLayer;
+import layers.CityLayer;
 import layers.TerrainType;
 import layers.TopographyLayer;
 
@@ -19,13 +19,13 @@ public class GameState {
     public static final double DEFAULT_HOUSING_AREA_PRICE = 10;
 
     private static TopographyLayer topography;
-    private static TerrainLayer terrain;
+    private static CityLayer terrain;
     private static double money = DEFAULT_MONEY;
 
 
     static {
         topography = new TopographyLayer(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 10, 64, 0.45);
-        terrain = new TerrainLayer(topography);
+        terrain = new CityLayer(topography);
     }
 
 
@@ -62,7 +62,7 @@ public class GameState {
         return topography;
     }
 
-    public static TerrainLayer getTerrain() {
+    public static CityLayer getTerrain() {
         return terrain;
     }
 

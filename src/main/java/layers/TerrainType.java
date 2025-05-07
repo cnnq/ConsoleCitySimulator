@@ -2,7 +2,7 @@ package layers;
 
 public enum TerrainType {
     WATER,
-    GRASS,
+    LAND,
     ROAD,
     HOUSING_AREA,
     HOUSE

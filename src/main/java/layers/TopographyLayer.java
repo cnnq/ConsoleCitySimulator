@@ -5,6 +5,7 @@ import other.GameState;
 import other.PerlinNoise;
 
 import java.awt.*;
+import java.util.Random;
 
 public class TopographyLayer implements Layer<Double> {
 
@@ -33,9 +34,12 @@ public class TopographyLayer implements Layer<Double> {
         this.waterLevel = waterLevel;
         buffer = new double[width][height];
 
+        Random random = new Random(seed);
+
         // Generate terrain
-        PerlinNoise noise1 = new PerlinNoise(seed);
-        PerlinNoise noise2 = new PerlinNoise(seed ^ 5769574);
+        PerlinNoise noise1 = new PerlinNoise(random.nextInt());
+        PerlinNoise noise2 = new PerlinNoise(random.nextInt());
+        PerlinNoise noise3 = new PerlinNoise(random.nextInt());
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -43,7 +47,8 @@ public class TopographyLayer implements Layer<Double> {
                 double h = 0;
                 h += noise1.getNoiseAt((double)x / cellSize, (double)y / cellSize);
                 h += noise2.getNoiseAt((double)x * 2 / cellSize, (double)y * 2 / cellSize);
-                h /= 2;
+                h += noise3.getNoiseAt((double)x * 4 / cellSize, (double)y * 4 / cellSize);
+                h /= 3;
 
                 set(x, y, h);
             }
@@ -99,7 +104,7 @@ public class TopographyLayer implements Layer<Double> {
         }
     }
 
-    private Color mix(Color a, Color b, double t) {
+    private static Color mix(Color a, Color b, double t) {
         return new Color((int)(a.getRed() * (1 - t) + b.getRed() * t), (int)(a.getGreen() * (1 - t) + b.getGreen() * t), (int)(a.getBlue() * (1 - t) + b.getBlue() * t));
     }
 

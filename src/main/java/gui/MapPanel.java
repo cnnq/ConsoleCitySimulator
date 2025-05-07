@@ -1,6 +1,6 @@
 package gui;
 
-import layers.TerrainLayer;
+import layers.CityLayer;
 import layers.TerrainType;
 import other.Game;
 import other.GameState;
@@ -14,10 +14,11 @@ import java.awt.event.*;
  */
 public class MapPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
 
-    private TerrainLayer terrain;
+    private CityLayer terrain;
 
     private int xOffset, yOffset;
 
+    private Point selectionFrom, selectionTo;
 
     public MapPanel() {
         setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT - 64));
@@ -41,6 +42,18 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
         super.paintComponent(g);
 
         terrain.draw(g, xOffset, yOffset, getWidth(), getHeight());
+
+        if (selectionFrom != null && selectionTo != null) {
+            g.setColor(Color.BLUE);
+
+            Point a = new Point(Math.min(selectionFrom.x, selectionTo.x), Math.min(selectionFrom.y, selectionTo.y));
+            Point b = new Point(Math.max(selectionFrom.x, selectionTo.x), Math.max(selectionFrom.y, selectionTo.y));
+
+            g.fillRect((a.x - xOffset) * GameState.TILE_SIZE,
+                    (a.y - yOffset) * GameState.TILE_SIZE,
+                    (b.x - a.x + 1) * GameState.TILE_SIZE,
+                    (b.y - a.y + 1) * GameState.TILE_SIZE);
+        }
     }
 
     @Override
@@ -78,12 +91,59 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
 
     @Override
     public void mousePressed(MouseEvent e) {
-        tryBuilding(e);
+        selectionFrom = getTilePosition(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        selectionTo = getTilePosition(e);
 
+        // Get price and tile to put depending on released button
+        double price;
+        TerrainType tile;
+
+        if (e.getButton() == MouseEvent.BUTTON1) {
+
+            // Convert selection to straight line
+            if (Math.abs(selectionTo.x - selectionFrom.x) >= Math.abs(selectionTo.y - selectionFrom.y)) {
+                selectionTo.y = selectionFrom.y;
+            } else {
+                selectionTo.x = selectionFrom.x;
+            }
+
+            price = GameState.DEFAULT_ROAD_PRICE;
+            tile = TerrainType.ROAD;
+
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
+            price = GameState.DEFAULT_HOUSING_AREA_PRICE;
+            tile = TerrainType.HOUSING_AREA;
+
+        } else {
+            selectionFrom = null;
+            selectionTo = null;
+            return;
+        }
+
+        // Convert selected points to a nice rectangle
+        Point a = new Point(Math.min(selectionFrom.x, selectionTo.x), Math.min(selectionFrom.y, selectionTo.y));
+        Point b = new Point(Math.max(selectionFrom.x, selectionTo.x), Math.max(selectionFrom.y, selectionTo.y));
+        Rectangle rectangle = new Rectangle(a, new Dimension(b.x - a.x, b.y - a.y));
+
+        // Estimate price of an operation
+        price *= terrain.count(rectangle, TerrainType.LAND);
+
+        if (GameState.getMoney() < price) {
+            selectionFrom = null;
+            selectionTo = null;
+            return;
+        }
+
+        // Build
+        terrain.replace(rectangle, TerrainType.LAND, tile);
+        GameState.setMoney(GameState.getMoney() - price);
+
+        selectionFrom = null;
+        selectionTo = null;
     }
 
     @Override
@@ -98,7 +158,7 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        tryBuilding(e);
+        selectionTo = getTilePosition(e);
     }
 
     @Override
@@ -106,34 +166,8 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
 
     }
 
-
-    private void tryBuilding(MouseEvent e) {
-        double price = 0;
-        TerrainType tile = TerrainType.GRASS;
-
-        if (e.getModifiersEx() == MouseEvent.BUTTON1_DOWN_MASK) {
-            price = GameState.DEFAULT_ROAD_PRICE;
-            tile = TerrainType.ROAD;
-
-        } else if (e.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK) {
-            price = GameState.DEFAULT_HOUSING_AREA_PRICE;
-            tile = TerrainType.HOUSING_AREA;
-
-        } else {
-            return;
-        }
-
-        // Skip if no money
-        if (GameState.getMoney() < price) return;
-
-        int x = e.getX() / GameState.TILE_SIZE + xOffset;
-        int y = e.getY() / GameState.TILE_SIZE + yOffset;
-
-        // If not out of bounds and terrain is suitable to build on
-        if (!(x >= 0 && x < terrain.getWidth() && y >= 0 && y < terrain.getHeight() && terrain.get(x, y) == TerrainType.GRASS)) return;
-
-        // Insert tile
-        terrain.set(x, y, tile);
-        GameState.setMoney(GameState.getMoney() - price);
+    private Point getTilePosition(MouseEvent e) {
+        return new Point(Math.clamp(e.getX() / GameState.TILE_SIZE + xOffset, 0, terrain.getWidth() - 1),
+                         Math.clamp(e.getY() / GameState.TILE_SIZE + yOffset, 0, terrain.getHeight() - 1));
     }
 }

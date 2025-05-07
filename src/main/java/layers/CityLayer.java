@@ -6,7 +6,7 @@ import other.GameState;
 
 import java.awt.*;
 
-public class TerrainLayer implements Layer<TerrainType> {
+public class CityLayer implements Layer<TerrainType> {
 
     private final int width;
     private final int height;
@@ -17,7 +17,7 @@ public class TerrainLayer implements Layer<TerrainType> {
     /**
      * Generate map of terrain
      */
-    public TerrainLayer(@NotNull TopographyLayer topography) {
+    public CityLayer(@NotNull TopographyLayer topography) {
 
         this.width = topography.getWidth();
         this.height = topography.getHeight();
@@ -33,7 +33,7 @@ public class TerrainLayer implements Layer<TerrainType> {
                 if (h <= topography.getWaterLevel()) {
                     set(x, y, TerrainType.WATER);
                 } else {
-                    set(x, y, TerrainType.GRASS);
+                    set(x, y, TerrainType.LAND);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class TerrainLayer implements Layer<TerrainType> {
                 Color color;
 
                 switch (get(x + xOffset, y + yOffset)) {
-                    case WATER, GRASS -> {
+                    case WATER, LAND -> {
                         continue;
                     }
                     case ROAD -> color = roadColor;
