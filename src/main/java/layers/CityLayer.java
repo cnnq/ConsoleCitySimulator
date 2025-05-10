@@ -9,21 +9,24 @@ import java.awt.event.MouseEvent;
 
 public class CityLayer implements Layer<TerrainType> {
 
+    private final GameState gameState;
+
     private final int width;
     private final int height;
     protected TerrainType[][] buffer;
 
-    private TopographyLayer topography;
 
     /**
      * Generate map of terrain
      */
-    public CityLayer(@NotNull TopographyLayer topography) {
-        this.width = topography.getWidth();
-        this.height = topography.getHeight();
+    public CityLayer(@NotNull GameState gameState) {
+        this.gameState = gameState;
+
+        this.width = gameState.getMapWidth();
+        this.height = gameState.getMapWidth();
         buffer = new TerrainType[width][height];
 
-        this.topography = topography;
+        TopographyLayer topography = gameState.getTopographyMap();
 
         // Generate terrain
         for (int x = 0; x < width; x++) {
@@ -42,7 +45,7 @@ public class CityLayer implements Layer<TerrainType> {
     @Override
     public void draw(Graphics g, int xOffset, int yOffset, int width, int height) {
 
-        topography.draw(g, xOffset, yOffset, width, height);
+        gameState.getTopographyMap().draw(g, xOffset, yOffset, width, height);
 
         int minX = Math.max(0, -xOffset);
         int minY = Math.max(0, -yOffset);
@@ -77,16 +80,6 @@ public class CityLayer implements Layer<TerrainType> {
     }
 
     @Override
-    public TerrainType get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
-        return buffer[x][y];
-    }
-
-    @Override
-    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, TerrainType value) {
-        buffer[x][y] = value;
-    }
-
-    @Override
     public boolean edit(@NotNull Rectangle rectangle, int button) {
         double price;
         TerrainType tile;
@@ -116,11 +109,22 @@ public class CityLayer implements Layer<TerrainType> {
 
         price *= count(rectangle, TerrainType.LAND);
 
-        if (GameState.getMoney() < price) return false;
+        if (gameState.getMoney() < price) return false;
 
         replace(rectangle, TerrainType.LAND, tile);
-        GameState.setMoney(GameState.getMoney() - price);
+        gameState.setMoney(gameState.getMoney() - price);
         return true;
+    }
+
+
+    @Override
+    public TerrainType get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
+        return buffer[x][y];
+    }
+
+    @Override
+    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, TerrainType value) {
+        buffer[x][y] = value;
     }
 
     @Override

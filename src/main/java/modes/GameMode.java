@@ -1,4 +1,4 @@
-package states;
+package modes;
 
 import org.jetbrains.annotations.NotNull;
 

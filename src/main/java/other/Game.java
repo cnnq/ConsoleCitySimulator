@@ -1,8 +1,8 @@
 package other;
 
 import org.jetbrains.annotations.NotNull;
-import states.EditMode;
-import states.GameMode;
+import modes.EditMode;
+import modes.GameMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class Game extends JFrame implements Runnable {
     public static final int DEFAULT_HEIGHT = 512;
     public static final int DEFAULT_FPS = 20;
 
-    // Use changeGameMode() method to change
+    private GameState gameState;
     private GameMode gameMode;
 
     private Thread thread;
@@ -30,7 +30,8 @@ public class Game extends JFrame implements Runnable {
 
         running = true;
 
-        changeGameMode(new EditMode());
+        gameState = new GameState();
+        changeGameMode(new EditMode(gameState));
 
         // Show
         setVisible(true);
@@ -50,7 +51,7 @@ public class Game extends JFrame implements Runnable {
         // run
         while (running) {
 
-            GameState.update(1f / DEFAULT_FPS);
+            gameState.update(1f / DEFAULT_FPS);
             repaint();
 
             long currentTime = System.nanoTime();

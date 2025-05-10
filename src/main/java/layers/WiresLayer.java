@@ -7,7 +7,7 @@ import other.GameState;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class PipesLayer implements Layer<Boolean> {
+public class WiresLayer implements Layer<Boolean> {
 
     private final int width;
     private final int height;
@@ -16,7 +16,7 @@ public class PipesLayer implements Layer<Boolean> {
     private GameState gameState;
 
 
-    public PipesLayer(@NotNull GameState gameState) {
+    public WiresLayer(@NotNull GameState gameState) {
         this.gameState = gameState;
 
         this.width = gameState.getMapWidth();
@@ -41,7 +41,7 @@ public class PipesLayer implements Layer<Boolean> {
             for (int y = minY; y < maxY; y++) {
 
                 if (get(x + xOffset, y + yOffset)) {
-                    g.setColor(Color.GRAY);
+                    g.setColor(Color.YELLOW);
                     g.fillRect(x * GameState.TILE_SIZE, y * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
                 }
             }
@@ -59,7 +59,7 @@ public class PipesLayer implements Layer<Boolean> {
             rectangle.width = 0;
         }
 
-        double price = GameState.DEFAULT_PIPE_PRICE * (rectangle.width + 1) * (rectangle.height + 1);
+        double price = GameState.DEFAULT_WIRE_PRICE * (rectangle.width + 1) * (rectangle.height + 1);
 
         if (gameState.getMoney() < price) return false;
 

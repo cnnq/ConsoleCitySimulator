@@ -2,8 +2,7 @@ package gui;
 
 import org.jetbrains.annotations.NotNull;
 import other.Game;
-import other.GameState;
-import states.EditMode;
+import modes.EditMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +13,7 @@ public class BottomBar extends JMenuBar {
 
     private final JButton cityEditButton;
     private final JButton pipesEditButton;
+    private final JButton wiresEditButton;
 
 
     public BottomBar(@NotNull EditMode editMode) {
@@ -22,17 +22,23 @@ public class BottomBar extends JMenuBar {
 
         cityEditButton = new JButton("Edit city");
         pipesEditButton = new JButton("Edit pipes");
+        wiresEditButton = new JButton("Edit wires");
 
         cityEditButton.addActionListener(e -> {
-            editMode.setLayer(GameState.getCity());
+            editMode.setLayer(editMode.getGameState().getCityMap());
         });
 
         pipesEditButton.addActionListener(e -> {
-            editMode.setLayer(GameState.getPipes());
+            editMode.setLayer(editMode.getGameState().getPipesMap());
+        });
+
+        wiresEditButton.addActionListener(e -> {
+            editMode.setLayer(editMode.getGameState().getWiresMap());
         });
 
         add(cityEditButton);
         add(pipesEditButton);
+        add(wiresEditButton);
     }
 
     @Override

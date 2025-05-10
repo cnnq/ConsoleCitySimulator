@@ -8,6 +8,24 @@ import java.awt.*;
 public interface Layer<T> {
 
     /**
+     * Draws current layer
+     * @param xOffset x tile coordinate
+     * @param yOffset y tile coordinate
+     * @param width width of target image in pixels
+     * @param height height of target image in pixels
+     */
+    void draw(Graphics g, int xOffset, int yOffset, int width, int height);
+
+    /**
+     * Edit layer using selected area and key state
+     * @param rectangle selected area
+     * @param button value returned by {@code MouseEvent.getButton()}
+     * @return true if edited successfully
+     */
+    boolean edit(@NotNull Rectangle rectangle, int button);
+
+
+    /**
      * Get value from buffer at (x, y) coordinates
      * @param x tile coordinate
      * @param y tile coordinate
@@ -22,6 +40,7 @@ public interface Layer<T> {
      * @param value value to be set in
      */
     void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T value);
+
 
     /**
      * Fills buffer within {@code rectangle} with {@code value}
@@ -74,24 +93,20 @@ public interface Layer<T> {
         return count;
     }
 
-
     /**
-     * Edit layer using selected area and key state
-     * @param rectangle selected area
-     * @param button value returned by {@code MouseEvent.getButton()}
-     * @return true if edited successfully
+     * Checks if given and adjacent tiles are of specified type
+     * @param x tile coordinate
+     * @param y tile coordinate
+     * @param tileType tile type to be checked
+     * @return true if neighbours
      */
-    boolean edit(@NotNull Rectangle rectangle, int button);
-
-
-    /**
-     * Draws current layer
-     * @param xOffset x tile coordinate
-     * @param yOffset y tile coordinate
-     * @param width width of target image in pixels
-     * @param height height of target image in pixels
-     */
-    void draw(Graphics g, int xOffset, int yOffset, int width, int height);
+    default boolean neighbours(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T tileType) {
+        return (get(x, y) == tileType ||
+                x > 0 && get(x - 1, y) == tileType ||
+                x + 1 < getWidth() && get(x + 1, y) == tileType ||
+                y > 0 && get(x, y - 1) == tileType ||
+                y + 1 < getHeight() && get(x, y + 1) == tileType);
+    }
 
     int getWidth();
 

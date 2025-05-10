@@ -1,9 +1,6 @@
 package other;
 
-import layers.CityLayer;
-import layers.PipesLayer;
-import layers.TerrainType;
-import layers.TopographyLayer;
+import layers.*;
 
 /**
  * Manages state of currently loaded game
@@ -11,6 +8,8 @@ import layers.TopographyLayer;
 public class GameState {
 
     public static final int DEFAULT_MAP_SIZE = 200;
+    public static final int DEFAULT_CELL_SIZE = 64;
+    public static final double DEFAULT_WATER_LEVEL = 0.45;
     public static final int TILE_SIZE = 8;
 
     // Prices in thousands of dollars
@@ -19,17 +18,29 @@ public class GameState {
     public static final double DEFAULT_ROAD_PRICE = 10;
     public static final double DEFAULT_HOUSING_AREA_PRICE = 10;
     public static final double DEFAULT_PIPE_PRICE = 1;
+    public static final double DEFAULT_WIRE_PRICE = 1;
 
-    private static TopographyLayer topography;
-    private static CityLayer city;
-    private static PipesLayer pipes;
-    private static double money = DEFAULT_MONEY;
+    private final int mapWidth;
+    private final int mapHeight;
+
+    private final TopographyLayer topographyMap;
+    private final CityLayer cityMap;
+    private final PipesLayer pipesMap;
+    private final WiresLayer wiresMap;
+
+    private double money;
 
 
-    static {
-        topography = new TopographyLayer(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 10, 64, 0.45);
-        city = new CityLayer(topography);
-        pipes = new PipesLayer(city);
+    public GameState() {
+        mapWidth = DEFAULT_MAP_SIZE;
+        mapHeight = DEFAULT_MAP_SIZE;
+
+        topographyMap = new TopographyLayer(this, 10, DEFAULT_CELL_SIZE, DEFAULT_WATER_LEVEL);
+        cityMap = new CityLayer(this);
+        pipesMap = new PipesLayer(this);
+        wiresMap = new WiresLayer(this);
+
+        money = DEFAULT_MONEY;
     }
 
 
@@ -37,48 +48,61 @@ public class GameState {
      * Update state of a game
      * @param deltaTime time in seconds
      */
-    public static void update(float deltaTime) {
+    public void update(float deltaTime) {
         if (deltaTime < 0) throw new IllegalArgumentException("deltaTime cannot be negative");
 
         int houses = 0;
-        for (int x = 0; x < city.getWidth(); x++) {
-            for (int y = 0; y < city.getHeight(); y++) {
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
 
-                // Build house if close to road
-                if (city.get(x, y) == TerrainType.HOUSING_AREA) {
-                    if (x > 0 && city.get(x - 1, y) == TerrainType.ROAD ||
-                        x + 1 < city.getWidth() && city.get(x + 1, y) == TerrainType.ROAD ||
-                        y > 0 && city.get(x, y - 1) == TerrainType.ROAD ||
-                        y + 1 < city.getHeight() && city.get(x, y + 1) == TerrainType.ROAD) {
+                // Build house if close to road and with access to water pipes
+                if (cityMap.get(x, y) == TerrainType.HOUSING_AREA &&
+                    cityMap.neighbours(x, y, TerrainType.ROAD) &&
+                    pipesMap.neighbours(x, y, true) &&
+                    wiresMap.neighbours(x, y, true)) {
 
-                        city.set(x, y, TerrainType.HOUSE);
-                    }
+                    cityMap.set(x, y, TerrainType.HOUSE);
                 }
 
-                if (city.get(x, y) == TerrainType.HOUSE) houses++;
+                if (cityMap.get(x, y) == TerrainType.HOUSE) houses++;
             }
         }
 
         money += houses * DEFAULT_RENT * deltaTime;
     }
 
-    public static TopographyLayer getTopography() {
-        return topography;
+
+    public int getMapWidth() {
+        return mapWidth;
     }
 
-    public static CityLayer getCity() {
-        return city;
+    public int getMapHeight() {
+        return mapHeight;
     }
 
-    public static PipesLayer getPipes() {
-        return pipes;
+
+    public TopographyLayer getTopographyMap() {
+        return topographyMap;
     }
 
-    public static double getMoney() {
+    public CityLayer getCityMap() {
+        return cityMap;
+    }
+
+    public PipesLayer getPipesMap() {
+        return pipesMap;
+    }
+
+    public WiresLayer getWiresMap() {
+        return wiresMap;
+    }
+
+
+    public double getMoney() {
         return money;
     }
 
-    public static void setMoney(double money) {
-        GameState.money = money;
+    public void setMoney(double money) {
+        this.money = money;
     }
 }

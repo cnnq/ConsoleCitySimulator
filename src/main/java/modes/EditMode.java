@@ -1,4 +1,4 @@
-package states;
+package modes;
 
 import gui.BottomBar;
 import layers.Layer;
@@ -15,6 +15,8 @@ import java.awt.*;
  */
 public class EditMode extends GameMode {
 
+    private final GameState gameState;
+
     private final TopBar topBar;
     private final MapPanel map;
     private final BottomBar bottomBar;
@@ -22,7 +24,10 @@ public class EditMode extends GameMode {
     private Layer layer;
 
 
-    public EditMode() {
+    public EditMode(@NotNull GameState gameState) {
+        this.gameState = gameState;
+        layer = gameState.getCityMap();
+
         // Configure GUI
         Container container = new Container();
         container.setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT));
@@ -42,9 +47,11 @@ public class EditMode extends GameMode {
         container.add(bottomBar);
 
         setContentPane(container);
+    }
 
-        // Set default layer
-        layer = GameState.getCity();
+    @NotNull
+    public GameState getGameState() {
+        return gameState;
     }
 
     @NotNull
