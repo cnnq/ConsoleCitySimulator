@@ -1,21 +1,29 @@
 package states;
 
+import gui.BottomBar;
+import layers.Layer;
+import org.jetbrains.annotations.NotNull;
 import other.Game;
 import gui.MapPanel;
 import gui.TopBar;
+import other.GameState;
 
-import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Game mode that allows to edit layers
+ */
 public class EditMode extends GameMode {
-
-    private static final int BOTTOM_BAR_HEIGHT = 32;
 
     private final TopBar topBar;
     private final MapPanel map;
+    private final BottomBar bottomBar;
+
+    private Layer layer;
 
 
     public EditMode() {
+        // Configure GUI
         Container container = new Container();
         container.setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT));
 
@@ -25,17 +33,26 @@ public class EditMode extends GameMode {
 
         container.setLayout(layout);
 
-        topBar = new TopBar();
-        map = new MapPanel();
-
-        JLabel bottom = new JLabel("Bottom", JLabel.CENTER);
-        bottom.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        bottom.setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, BOTTOM_BAR_HEIGHT));
+        topBar = new TopBar(this);
+        map = new MapPanel(this);
+        bottomBar = new BottomBar(this);
 
         container.add(topBar);
         container.add(map);
-        container.add(bottom);
+        container.add(bottomBar);
 
         setContentPane(container);
+
+        // Set default layer
+        layer = GameState.getCity();
+    }
+
+    @NotNull
+    public Layer getLayer() {
+        return layer;
+    }
+
+    public void setLayer(@NotNull Layer layer) {
+        this.layer = layer;
     }
 }

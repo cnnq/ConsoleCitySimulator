@@ -1,5 +1,6 @@
 package layers;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import other.GameState;
 import other.PerlinNoise;
@@ -68,6 +69,11 @@ public class TopographyLayer implements Layer<Double> {
         if (value < 0 || value > 1) throw new IllegalArgumentException("value must be between 0 and 1");
 
         buffer[x][y] = value;
+    }
+
+    @Override
+    public boolean edit(@NotNull Rectangle rectangle, int button) {
+        return false;
     }
 
     @Override

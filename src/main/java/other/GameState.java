@@ -1,6 +1,7 @@
 package other;
 
 import layers.CityLayer;
+import layers.PipesLayer;
 import layers.TerrainType;
 import layers.TopographyLayer;
 
@@ -17,15 +18,18 @@ public class GameState {
     public static final double DEFAULT_RENT = 1;
     public static final double DEFAULT_ROAD_PRICE = 10;
     public static final double DEFAULT_HOUSING_AREA_PRICE = 10;
+    public static final double DEFAULT_PIPE_PRICE = 1;
 
     private static TopographyLayer topography;
-    private static CityLayer terrain;
+    private static CityLayer city;
+    private static PipesLayer pipes;
     private static double money = DEFAULT_MONEY;
 
 
     static {
         topography = new TopographyLayer(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 10, 64, 0.45);
-        terrain = new CityLayer(topography);
+        city = new CityLayer(topography);
+        pipes = new PipesLayer(city);
     }
 
 
@@ -37,21 +41,21 @@ public class GameState {
         if (deltaTime < 0) throw new IllegalArgumentException("deltaTime cannot be negative");
 
         int houses = 0;
-        for (int x = 0; x < terrain.getWidth(); x++) {
-            for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int x = 0; x < city.getWidth(); x++) {
+            for (int y = 0; y < city.getHeight(); y++) {
 
                 // Build house if close to road
-                if (terrain.get(x, y) == TerrainType.HOUSING_AREA) {
-                    if (x > 0 && terrain.get(x - 1, y) == TerrainType.ROAD ||
-                        x + 1 < terrain.getWidth() && terrain.get(x + 1, y) == TerrainType.ROAD ||
-                        y > 0 && terrain.get(x, y - 1) == TerrainType.ROAD ||
-                        y + 1 < terrain.getHeight() && terrain.get(x, y + 1) == TerrainType.ROAD) {
+                if (city.get(x, y) == TerrainType.HOUSING_AREA) {
+                    if (x > 0 && city.get(x - 1, y) == TerrainType.ROAD ||
+                        x + 1 < city.getWidth() && city.get(x + 1, y) == TerrainType.ROAD ||
+                        y > 0 && city.get(x, y - 1) == TerrainType.ROAD ||
+                        y + 1 < city.getHeight() && city.get(x, y + 1) == TerrainType.ROAD) {
 
-                        terrain.set(x, y, TerrainType.HOUSE);
+                        city.set(x, y, TerrainType.HOUSE);
                     }
                 }
 
-                if (terrain.get(x, y) == TerrainType.HOUSE) houses++;
+                if (city.get(x, y) == TerrainType.HOUSE) houses++;
             }
         }
 
@@ -62,8 +66,12 @@ public class GameState {
         return topography;
     }
 
-    public static CityLayer getTerrain() {
-        return terrain;
+    public static CityLayer getCity() {
+        return city;
+    }
+
+    public static PipesLayer getPipes() {
+        return pipes;
     }
 
     public static double getMoney() {

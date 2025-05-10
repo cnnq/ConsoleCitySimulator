@@ -1,9 +1,9 @@
 package gui;
 
-import layers.CityLayer;
-import layers.TerrainType;
+import org.jetbrains.annotations.NotNull;
 import other.Game;
 import other.GameState;
+import states.EditMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,20 +14,20 @@ import java.awt.event.*;
  */
 public class MapPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
 
-    private CityLayer terrain;
-
+    private final EditMode editMode;
     private int xOffset, yOffset;
 
     private Point selectionFrom, selectionTo;
 
-    public MapPanel() {
+
+    public MapPanel(@NotNull EditMode editMode) {
         setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT - 64));
 
-        terrain = GameState.getTerrain();
+        this.editMode = editMode;
 
         // Set view to center of the map
-        xOffset = (terrain.getWidth() - Game.DEFAULT_WIDTH / GameState.TILE_SIZE) / 2;
-        yOffset = (terrain.getHeight() - (Game.DEFAULT_HEIGHT - 64) / GameState.TILE_SIZE) / 2;
+        xOffset = (editMode.getLayer().getWidth() - Game.DEFAULT_WIDTH / GameState.TILE_SIZE) / 2;
+        yOffset = (editMode.getLayer().getHeight() - (Game.DEFAULT_HEIGHT - 64) / GameState.TILE_SIZE) / 2;
 
         setFocusable(true);
 
@@ -41,8 +41,10 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        terrain.draw(g, xOffset, yOffset, getWidth() / GameState.TILE_SIZE, getHeight() / GameState.TILE_SIZE);
+        // Draw layer
+        editMode.getLayer().draw(g, xOffset, yOffset, getWidth() / GameState.TILE_SIZE, getHeight() / GameState.TILE_SIZE);
 
+        // Draw selected area
         if (selectionFrom != null && selectionTo != null) {
             g.setColor(Color.BLUE);
 
@@ -55,6 +57,7 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
                     (b.y - a.y + 1) * GameState.TILE_SIZE);
         }
     }
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -84,6 +87,7 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
 
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -98,50 +102,14 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
     public void mouseReleased(MouseEvent e) {
         selectionTo = getTilePosition(e);
 
-        // Get price and tile to put depending on released button
-        double price;
-        TerrainType tile;
-
-        if (e.getButton() == MouseEvent.BUTTON1) {
-
-            // Convert selection to straight line
-            if (Math.abs(selectionTo.x - selectionFrom.x) >= Math.abs(selectionTo.y - selectionFrom.y)) {
-                selectionTo.y = selectionFrom.y;
-            } else {
-                selectionTo.x = selectionFrom.x;
-            }
-
-            price = GameState.DEFAULT_ROAD_PRICE;
-            tile = TerrainType.ROAD;
-
-        } else if (e.getButton() == MouseEvent.BUTTON3) {
-            price = GameState.DEFAULT_HOUSING_AREA_PRICE;
-            tile = TerrainType.HOUSING_AREA;
-
-        } else {
-            selectionFrom = null;
-            selectionTo = null;
-            return;
-        }
-
         // Convert selected points to a nice rectangle
         Point a = new Point(Math.min(selectionFrom.x, selectionTo.x), Math.min(selectionFrom.y, selectionTo.y));
         Point b = new Point(Math.max(selectionFrom.x, selectionTo.x), Math.max(selectionFrom.y, selectionTo.y));
         Rectangle rectangle = new Rectangle(a, new Dimension(b.x - a.x, b.y - a.y));
 
-        // Estimate price of an operation
-        price *= terrain.count(rectangle, TerrainType.LAND);
+        editMode.getLayer().edit(rectangle, e.getButton());
 
-        if (GameState.getMoney() < price) {
-            selectionFrom = null;
-            selectionTo = null;
-            return;
-        }
-
-        // Build
-        terrain.replace(rectangle, TerrainType.LAND, tile);
-        GameState.setMoney(GameState.getMoney() - price);
-
+        // Release selected area
         selectionFrom = null;
         selectionTo = null;
     }
@@ -166,8 +134,9 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
 
     }
 
+
     private Point getTilePosition(MouseEvent e) {
-        return new Point(Math.clamp(e.getX() / GameState.TILE_SIZE + xOffset, 0, terrain.getWidth() - 1),
-                         Math.clamp(e.getY() / GameState.TILE_SIZE + yOffset, 0, terrain.getHeight() - 1));
+        return new Point(Math.clamp(e.getX() / GameState.TILE_SIZE + xOffset, 0, editMode.getLayer().getWidth() - 1),
+                         Math.clamp(e.getY() / GameState.TILE_SIZE + yOffset, 0, editMode.getLayer().getHeight() - 1));
     }
 }

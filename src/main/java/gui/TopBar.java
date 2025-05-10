@@ -1,7 +1,9 @@
 package gui;
 
+import org.jetbrains.annotations.NotNull;
 import other.Game;
 import other.GameState;
+import states.EditMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,8 @@ public class TopBar extends JMenuBar {
 
     private JLabel moneyLabel;
 
-    public TopBar() {
+
+    public TopBar(@NotNull EditMode editMode) {
         setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, TOP_BAR_HEIGHT));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 

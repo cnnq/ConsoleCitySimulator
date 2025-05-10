@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Range;
 import other.GameState;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class CityLayer implements Layer<TerrainType> {
 
@@ -12,13 +13,12 @@ public class CityLayer implements Layer<TerrainType> {
     private final int height;
     protected TerrainType[][] buffer;
 
-    TopographyLayer topography;
+    private TopographyLayer topography;
 
     /**
      * Generate map of terrain
      */
     public CityLayer(@NotNull TopographyLayer topography) {
-
         this.width = topography.getWidth();
         this.height = topography.getHeight();
         buffer = new TerrainType[width][height];
@@ -71,7 +71,8 @@ public class CityLayer implements Layer<TerrainType> {
                 }
 
                 g.setColor(color);
-                g.fillRect(x * GameState.TILE_SIZE, y * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);}
+                g.fillRect(x * GameState.TILE_SIZE, y * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
+            }
         }
     }
 
@@ -83,6 +84,43 @@ public class CityLayer implements Layer<TerrainType> {
     @Override
     public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, TerrainType value) {
         buffer[x][y] = value;
+    }
+
+    @Override
+    public boolean edit(@NotNull Rectangle rectangle, int button) {
+        double price;
+        TerrainType tile;
+
+        switch (button){
+            case MouseEvent.BUTTON1:
+                // Convert selection to straight line
+                if (rectangle.width >= rectangle.height) {
+                    rectangle.height = 0;
+                } else {
+                    rectangle.width = 0;
+                }
+
+                price = GameState.DEFAULT_ROAD_PRICE;
+                tile = TerrainType.ROAD;
+
+                break;
+
+            case MouseEvent.BUTTON3:
+                price = GameState.DEFAULT_HOUSING_AREA_PRICE;
+                tile = TerrainType.HOUSING_AREA;
+                break;
+
+            default:
+                return false;
+        }
+
+        price *= count(rectangle, TerrainType.LAND);
+
+        if (GameState.getMoney() < price) return false;
+
+        replace(rectangle, TerrainType.LAND, tile);
+        GameState.setMoney(GameState.getMoney() - price);
+        return true;
     }
 
     @Override

@@ -9,16 +9,16 @@ public interface Layer<T> {
 
     /**
      * Get value from buffer at (x, y) coordinates
-     * @param x coordinate
-     * @param y coordinate
+     * @param x tile coordinate
+     * @param y tile coordinate
      * @return value
      */
     T get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y);
 
     /**
      * Set value at (x, y) coordinates
-     * @param x coordinate
-     * @param y coordinate
+     * @param x tile coordinate
+     * @param y tile coordinate
      * @param value value to be set in
      */
     void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T value);
@@ -76,11 +76,20 @@ public interface Layer<T> {
 
 
     /**
+     * Edit layer using selected area and key state
+     * @param rectangle selected area
+     * @param button value returned by {@code MouseEvent.getButton()}
+     * @return true if edited successfully
+     */
+    boolean edit(@NotNull Rectangle rectangle, int button);
+
+
+    /**
      * Draws current layer
-     * @param xOffset x coordinate
-     * @param yOffset y coordinate
-     * @param width width of target image
-     * @param height height of target image
+     * @param xOffset x tile coordinate
+     * @param yOffset y tile coordinate
+     * @param width width of target image in pixels
+     * @param height height of target image in pixels
      */
     void draw(Graphics g, int xOffset, int yOffset, int width, int height);
 
