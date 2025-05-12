@@ -49,22 +49,31 @@ public class PipesLayer implements Layer<Boolean> {
 
     @Override
     public boolean edit(@NotNull Rectangle rectangle, int button) {
-        if (button != MouseEvent.BUTTON1) return false;
 
-        // Convert selection to straight line
-        if (rectangle.width >= rectangle.height) {
-            rectangle.height = 0;
-        } else {
-            rectangle.width = 0;
+        switch (button) {
+            case MouseEvent.BUTTON1:
+                // Convert selection to straight line
+                if (rectangle.width >= rectangle.height) {
+                    rectangle.height = 0;
+                } else {
+                    rectangle.width = 0;
+                }
+
+                double price = Building.PIPES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
+
+                if (gameState.getMoney() < price) return false;
+
+                fill(rectangle, true);
+                gameState.setMoney(gameState.getMoney() - price);
+                return true;
+
+            case MouseEvent.BUTTON3:
+                fill(rectangle, null);
+                return true;
+
+            default:
+                return false;
         }
-
-        double price = Building.PIPES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
-
-        if (gameState.getMoney() < price) return false;
-
-        fill(rectangle, true);
-        gameState.setMoney(gameState.getMoney() - price);
-        return true;
     }
 
 

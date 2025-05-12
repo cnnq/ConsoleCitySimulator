@@ -12,7 +12,7 @@ import java.awt.event.*;
 /**
  * Pane on which map will be drawn
  */
-public class MapPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
+public class MapPanel extends JPanel implements MouseListener, MouseMotionListener {
 
     private final EditMode editMode;
     private int xOffset, yOffset;
@@ -29,11 +29,10 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
         xOffset = (editMode.getLayer().getWidth() - Game.DEFAULT_WIDTH / GameState.TILE_SIZE) / 2;
         yOffset = (editMode.getLayer().getHeight() - (Game.DEFAULT_HEIGHT - 64) / GameState.TILE_SIZE) / 2;
 
-        setFocusable(true);
-
-        addKeyListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
+
+        initializeKeyBindings();
     }
 
 
@@ -56,35 +55,6 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
                     (b.x - a.x + 1) * GameState.TILE_SIZE,
                     (b.y - a.y + 1) * GameState.TILE_SIZE);
         }
-    }
-
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_RIGHT:
-                xOffset++;
-                break;
-            case KeyEvent.VK_LEFT:
-                xOffset--;
-                break;
-            case KeyEvent.VK_UP:
-                yOffset--;
-                break;
-            case KeyEvent.VK_DOWN:
-                yOffset++;
-                break;
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 
 
@@ -134,6 +104,41 @@ public class MapPanel extends JPanel implements KeyListener, MouseListener, Mous
 
     }
 
+
+    private void initializeKeyBindings() {
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
+
+        getActionMap().put("moveUp", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                yOffset--;
+            }
+        });
+
+        getActionMap().put("moveRight", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                xOffset++;
+            }
+        });
+
+        getActionMap().put("moveDown", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                yOffset++;
+            }
+        });
+
+        getActionMap().put("moveLeft", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                xOffset--;
+            }
+        });
+    }
 
     private Point getTilePosition(MouseEvent e) {
         return new Point(Math.clamp(e.getX() / GameState.TILE_SIZE + xOffset, 0, editMode.getLayer().getWidth() - 1),

@@ -72,6 +72,7 @@ public class TopographyLayer implements Layer<Double> {
                 int tileY = displayedTileY + yOffset;
 
                 // Interpolate color
+                /*
                 Color color00 = getColor(get(tileX, tileY));
                 Color color01 = getColor(get(tileX, tileY + 1));
                 Color color10 = getColor(get(tileX + 1, tileY));
@@ -87,7 +88,10 @@ public class TopographyLayer implements Layer<Double> {
                         g.setColor(color);
                         g.fillRect(displayedTileX * GameState.TILE_SIZE + GameState.TILE_SIZE / 2 + x, displayedTileY * GameState.TILE_SIZE + GameState.TILE_SIZE / 2 + y, 1, 1);
                     }
-                }
+                } */
+
+                g.setColor(getColor(get(tileX, tileY)));
+                g.fillRect(displayedTileX * GameState.TILE_SIZE, displayedTileY * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
             }
         }
     }

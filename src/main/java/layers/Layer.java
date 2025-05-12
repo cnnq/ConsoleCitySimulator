@@ -48,10 +48,13 @@ public interface Layer<T> {
      * Fills buffer within {@code rectangle} with {@code value}
      * @param rectangle area to be filled (including bottom right corner)
      * @param value value to be filled in
+     * @exception IllegalArgumentException rectangle was outside of map borders
      */
-    default void fill(@NotNull Rectangle rectangle, T value){
-        for (int x = rectangle.x; x <= rectangle.x + rectangle.width; x++) {
-            for (int y = rectangle.y; y <= rectangle.y + rectangle.height; y++) {
+    default void fill(@NotNull Rectangle rectangle, T value) {
+        checkRectangle(rectangle);
+
+        for (int x = Math.max(rectangle.x, 0); x <= rectangle.x + rectangle.width; x++) {
+            for (int y = Math.max(rectangle.y, 0); y <= rectangle.y + rectangle.height; y++) {
                 set(x, y, value);
             }
         }
@@ -64,8 +67,11 @@ public interface Layer<T> {
      * @param oldValue value to be replaced
      * @param newValue value to be filled in
      * @return number of replaced fields
+     * @exception IllegalArgumentException rectangle was outside of map borders
      */
     default int replace(@NotNull Rectangle rectangle, T oldValue, T newValue) {
+        checkRectangle(rectangle);
+
         int count = 0;
         for (int x = rectangle.x; x <= rectangle.x + rectangle.width; x++) {
             for (int y = rectangle.y; y <= rectangle.y + rectangle.height; y++) {
@@ -84,8 +90,11 @@ public interface Layer<T> {
      * @param rectangle area to be counted on
      * @param value value to be counted
      * @return number of instances of {@code value}
+     * @exception IllegalArgumentException rectangle was outside of map borders
      */
     default int count(@NotNull Rectangle rectangle, T value) {
+        checkRectangle(rectangle);
+
         int count = 0;
         for (int x = rectangle.x; x <= rectangle.x + rectangle.width; x++) {
             for (int y = rectangle.y; y <= rectangle.y + rectangle.height; y++) {
@@ -100,7 +109,7 @@ public interface Layer<T> {
      * @param x tile coordinate
      * @param y tile coordinate
      * @param tileType tile type to be checked
-     * @return true if neighbours
+     * @return true if neighbours with {@code tileType}
      */
     default boolean neighbours(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T tileType) {
         return (get(x, y) == tileType ||
@@ -124,4 +133,16 @@ public interface Layer<T> {
     int getWidth();
 
     int getHeight();
+
+
+    private void checkRectangle(@NotNull Rectangle rectangle) throws IllegalArgumentException {
+        if (rectangle.x < 0 || rectangle.y < 0 ||
+                (rectangle.x + rectangle.width) >= getWidth() ||
+                (rectangle.y + rectangle.height) >= getHeight()) {
+            throw new IllegalArgumentException(
+                    "rectangle must be within map borders\n" +
+                            "Rectangle: from: [" + rectangle.x + ", " + rectangle.y + "], to: [" + (rectangle.x + rectangle.width + 1) + ", " + (rectangle.y + rectangle.height + 1) + "]\n" +
+                            "Map: from: [0, 0], to: [" + getWidth() + ", " + getHeight() + "]");
+        }
+    }
 }

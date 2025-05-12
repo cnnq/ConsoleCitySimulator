@@ -12,8 +12,8 @@ import java.awt.*;
  */
 public class Game extends JFrame implements Runnable {
 
-    public static final int DEFAULT_WIDTH = 512;
-    public static final int DEFAULT_HEIGHT = 512;
+    public static final int DEFAULT_WIDTH = 512 + 256;
+    public static final int DEFAULT_HEIGHT = 512 + 256;
     public static final int DEFAULT_FPS = 20;
 
     private GameState gameState;

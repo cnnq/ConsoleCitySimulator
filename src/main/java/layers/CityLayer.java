@@ -84,15 +84,19 @@ public class CityLayer implements Layer<Building> {
                 building = Building.ROAD;
                 break;
 
-            case MouseEvent.BUTTON3:
+            case MouseEvent.BUTTON2:
                 building = Building.HOUSING_AREA;
                 break;
+
+            case MouseEvent.BUTTON3:
+                fill(rectangle, null);
+                return true;
 
             default:
                 return false;
         }
 
-        double price = building.getBuildingCost() * count(rectangle, building);
+        double price = building.getBuildingCost() * count(rectangle, null);
 
         if (gameState.getMoney() < price) return false;
 
