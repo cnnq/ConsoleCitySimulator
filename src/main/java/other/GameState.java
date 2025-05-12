@@ -10,15 +10,11 @@ public class GameState {
     public static final int DEFAULT_MAP_SIZE = 200;
     public static final int DEFAULT_CELL_SIZE = 64;
     public static final double DEFAULT_WATER_LEVEL = 0.45;
-    public static final int TILE_SIZE = 8;
+    public static final int TILE_SIZE = 32;
 
     // Prices in thousands of dollars
     public static final double DEFAULT_MONEY = 1000;
     public static final double DEFAULT_RENT = 1;
-    public static final double DEFAULT_ROAD_PRICE = 10;
-    public static final double DEFAULT_HOUSING_AREA_PRICE = 10;
-    public static final double DEFAULT_PIPE_PRICE = 1;
-    public static final double DEFAULT_WIRE_PRICE = 1;
 
     private final int mapWidth;
     private final int mapHeight;
@@ -56,15 +52,15 @@ public class GameState {
             for (int y = 0; y < cityMap.getHeight(); y++) {
 
                 // Build house if close to road and with access to water pipes
-                if (cityMap.get(x, y) == TerrainType.HOUSING_AREA &&
-                    cityMap.neighbours(x, y, TerrainType.ROAD) &&
+                if (cityMap.get(x, y) == Building.HOUSING_AREA &&
+                    cityMap.neighbours(x, y, Building.ROAD) &&
                     pipesMap.neighbours(x, y, true) &&
                     wiresMap.neighbours(x, y, true)) {
 
-                    cityMap.set(x, y, TerrainType.HOUSE);
+                    cityMap.set(x, y, Building.HOUSE);
                 }
 
-                if (cityMap.get(x, y) == TerrainType.HOUSE) houses++;
+                if (cityMap.get(x, y) == Building.HOUSE) houses++;
             }
         }
 

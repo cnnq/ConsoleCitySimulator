@@ -2,18 +2,21 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
+import other.Building;
+import other.Directions;
 import other.GameState;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.EnumSet;
 
-public class CityLayer implements Layer<TerrainType> {
+public class CityLayer implements Layer<Building> {
 
     private final GameState gameState;
 
     private final int width;
     private final int height;
-    protected TerrainType[][] buffer;
+    protected Building[][] buffer;
 
 
     /**
@@ -24,19 +27,17 @@ public class CityLayer implements Layer<TerrainType> {
 
         this.width = gameState.getMapWidth();
         this.height = gameState.getMapWidth();
-        buffer = new TerrainType[width][height];
+        buffer = new Building[width][height];
 
         TopographyLayer topography = gameState.getTopographyMap();
 
-        // Generate terrain
+        // Fill with water
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 double h = topography.get(x, y);
 
                 if (h <= topography.getWaterLevel()) {
-                    set(x, y, TerrainType.WATER);
-                } else {
-                    set(x, y, TerrainType.LAND);
+                    set(x, y, Building.WATER);
                 }
             }
         }
@@ -56,33 +57,20 @@ public class CityLayer implements Layer<TerrainType> {
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
 
-                final Color roadColor = new Color(5, 4, 1);
-                final Color housingAreaColor = new Color(44, 230, 83);
-                final Color houseColor = new Color(181, 56, 25);
-                final Color defaultColor = new Color(255, 0, 255);
+                Building building = get(x + xOffset, y + yOffset);
+                if (building == null) continue;
 
-                Color color;
+                EnumSet<Directions> neighbourData = null;
+                if (building.isNeighbourDependent()) neighbourData = getNeighbourData(x + xOffset, y + yOffset, building);
 
-                switch (get(x + xOffset, y + yOffset)) {
-                    case WATER, LAND -> {
-                        continue;
-                    }
-                    case ROAD -> color = roadColor;
-                    case HOUSING_AREA -> color = housingAreaColor;
-                    case HOUSE -> color = houseColor;
-                    default -> color = defaultColor;
-                }
-
-                g.setColor(color);
-                g.fillRect(x * GameState.TILE_SIZE, y * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
+                building.draw(g, x, y, neighbourData);
             }
         }
     }
 
     @Override
     public boolean edit(@NotNull Rectangle rectangle, int button) {
-        double price;
-        TerrainType tile;
+        Building building;
 
         switch (button){
             case MouseEvent.BUTTON1:
@@ -93,37 +81,34 @@ public class CityLayer implements Layer<TerrainType> {
                     rectangle.width = 0;
                 }
 
-                price = GameState.DEFAULT_ROAD_PRICE;
-                tile = TerrainType.ROAD;
-
+                building = Building.ROAD;
                 break;
 
             case MouseEvent.BUTTON3:
-                price = GameState.DEFAULT_HOUSING_AREA_PRICE;
-                tile = TerrainType.HOUSING_AREA;
+                building = Building.HOUSING_AREA;
                 break;
 
             default:
                 return false;
         }
 
-        price *= count(rectangle, TerrainType.LAND);
+        double price = building.getBuildingCost() * count(rectangle, building);
 
         if (gameState.getMoney() < price) return false;
 
-        replace(rectangle, TerrainType.LAND, tile);
+        replace(rectangle, null, building);
         gameState.setMoney(gameState.getMoney() - price);
         return true;
     }
 
 
     @Override
-    public TerrainType get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
+    public Building get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
         return buffer[x][y];
     }
 
     @Override
-    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, TerrainType value) {
+    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, Building value) {
         buffer[x][y] = value;
     }
 

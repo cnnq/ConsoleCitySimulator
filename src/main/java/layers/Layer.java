@@ -2,8 +2,10 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
+import other.Directions;
 
 import java.awt.*;
+import java.util.EnumSet;
 
 public interface Layer<T> {
 
@@ -106,6 +108,17 @@ public interface Layer<T> {
                 x + 1 < getWidth() && get(x + 1, y) == tileType ||
                 y > 0 && get(x, y - 1) == tileType ||
                 y + 1 < getHeight() && get(x, y + 1) == tileType);
+    }
+
+    default EnumSet<Directions> getNeighbourData(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, T tileType) {
+        EnumSet<Directions> result = EnumSet.noneOf(Directions.class);
+
+        if (y > 0 && get(x, y - 1) == tileType) result.add(Directions.UP);
+        if (x + 1 < getWidth() && get(x + 1, y) == tileType) result.add(Directions.RIGHT);
+        if (y + 1 < getHeight() && get(x, y + 1) == tileType) result.add(Directions.DOWN);
+        if (x > 0 && get(x - 1, y) == tileType) result.add(Directions.LEFT);
+
+        return result;
     }
 
     int getWidth();

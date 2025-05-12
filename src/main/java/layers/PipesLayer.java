@@ -2,6 +2,7 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
+import other.Building;
 import other.GameState;
 
 import java.awt.*;
@@ -39,10 +40,8 @@ public class PipesLayer implements Layer<Boolean> {
 
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-
                 if (get(x + xOffset, y + yOffset)) {
-                    g.setColor(Color.GRAY);
-                    g.fillRect(x * GameState.TILE_SIZE, y * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
+                    Building.PIPES.draw(g, x, y, getNeighbourData(x + xOffset, y + yOffset, true));
                 }
             }
         }
@@ -59,7 +58,7 @@ public class PipesLayer implements Layer<Boolean> {
             rectangle.width = 0;
         }
 
-        double price = GameState.DEFAULT_PIPE_PRICE * (rectangle.width + 1) * (rectangle.height + 1);
+        double price = Building.PIPES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
 
         if (gameState.getMoney() < price) return false;
 
