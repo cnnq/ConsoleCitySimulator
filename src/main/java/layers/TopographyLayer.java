@@ -2,7 +2,7 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import other.GameState;
+import other.Game;
 import other.PerlinNoise;
 
 import java.awt.*;
@@ -17,11 +17,11 @@ public class TopographyLayer implements Layer<Double> {
 
     /**
      * Generate topography of terrain
-     * @param gameState
+     * @param game
      * @param seed seed to generate terrain from
      * @param cellSize determines how big islands of the same terrain should be
      */
-    public TopographyLayer(@NotNull GameState gameState,
+    public TopographyLayer(@NotNull Game game,
                            long seed,
                            @Range(from = 1, to = Integer.MAX_VALUE) int cellSize,
                            double waterLevel) {
@@ -29,8 +29,8 @@ public class TopographyLayer implements Layer<Double> {
         if (waterLevel < 0 || waterLevel > 1) throw new IllegalArgumentException("waterLevel must be between 0 and 1");
         this.waterLevel = waterLevel;
 
-        this.width = gameState.getMapWidth();
-        this.height = gameState.getMapHeight();
+        this.width = game.getMapWidth();
+        this.height = game.getMapHeight();
         buffer = new double[width][height];
 
         Random random = new Random(seed);
@@ -91,7 +91,7 @@ public class TopographyLayer implements Layer<Double> {
                 } */
 
                 g.setColor(getColor(get(tileX, tileY)));
-                g.fillRect(displayedTileX * GameState.TILE_SIZE, displayedTileY * GameState.TILE_SIZE, GameState.TILE_SIZE, GameState.TILE_SIZE);
+                g.fillRect(displayedTileX * Game.TILE_SIZE, displayedTileY * Game.TILE_SIZE, Game.TILE_SIZE, Game.TILE_SIZE);
             }
         }
     }

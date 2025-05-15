@@ -1,7 +1,6 @@
 package gui;
 
 import org.jetbrains.annotations.NotNull;
-import other.Game;
 import modes.EditMode;
 
 import javax.swing.*;
@@ -17,7 +16,7 @@ public class BottomBar extends JMenuBar {
 
 
     public BottomBar(@NotNull EditMode editMode) {
-        setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, BOTTOM_BAR_HEIGHT));
+        setPreferredSize(new Dimension(GameWindow.DEFAULT_WIDTH, BOTTOM_BAR_HEIGHT));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         cityEditButton = new JButton("Edit city");
@@ -25,15 +24,18 @@ public class BottomBar extends JMenuBar {
         wiresEditButton = new JButton("Edit wires");
 
         cityEditButton.addActionListener(e -> {
-            editMode.setLayer(editMode.getGameState().getCityMap());
+            editMode.setTopBar(new CityTopBar(editMode));
+            editMode.setLayer(editMode.getGame().getCityMap());
         });
 
         pipesEditButton.addActionListener(e -> {
-            editMode.setLayer(editMode.getGameState().getPipesMap());
+            editMode.setTopBar(new PipesTopBar(editMode));
+            editMode.setLayer(editMode.getGame().getPipesMap());
         });
 
         wiresEditButton.addActionListener(e -> {
-            editMode.setLayer(editMode.getGameState().getWiresMap());
+            editMode.setTopBar(new WiresTopBar(editMode));
+            editMode.setLayer(editMode.getGame().getWiresMap());
         });
 
         add(cityEditButton);

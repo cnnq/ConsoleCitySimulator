@@ -1,10 +1,12 @@
 package layers;
 
+import gui.CityTopBar;
+import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import other.Building;
 import other.Directions;
-import other.GameState;
+import other.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,7 +14,7 @@ import java.util.EnumSet;
 
 public class CityLayer implements Layer<Building> {
 
-    private final GameState gameState;
+    private final Game game;
 
     private final int width;
     private final int height;
@@ -22,14 +24,14 @@ public class CityLayer implements Layer<Building> {
     /**
      * Generate map of terrain
      */
-    public CityLayer(@NotNull GameState gameState) {
-        this.gameState = gameState;
+    public CityLayer(@NotNull Game game) {
+        this.game = game;
 
-        this.width = gameState.getMapWidth();
-        this.height = gameState.getMapWidth();
+        this.width = game.getMapWidth();
+        this.height = game.getMapWidth();
         buffer = new Building[width][height];
 
-        TopographyLayer topography = gameState.getTopographyMap();
+        TopographyLayer topography = game.getTopographyMap();
 
         // Fill with water
         for (int x = 0; x < width; x++) {
@@ -46,7 +48,7 @@ public class CityLayer implements Layer<Building> {
     @Override
     public void draw(Graphics g, int xOffset, int yOffset, int width, int height) {
 
-        gameState.getTopographyMap().draw(g, xOffset, yOffset, width, height);
+        game.getTopographyMap().draw(g, xOffset, yOffset, width, height);
 
         int minX = Math.max(0, -xOffset);
         int minY = Math.max(0, -yOffset);
@@ -70,22 +72,22 @@ public class CityLayer implements Layer<Building> {
 
     @Override
     public boolean edit(@NotNull Rectangle rectangle, int button) {
-        Building building;
+        if(!(game.getGameWindow().getGameMode() instanceof EditMode editMode)) return false;
+        if(!(editMode.getTopBar() instanceof CityTopBar topBar)) return false;
 
-        switch (button){
+        Building building = topBar.getChoosenBuilding();
+
+        switch (button) {
             case MouseEvent.BUTTON1:
-                // Convert selection to straight line
-                if (rectangle.width >= rectangle.height) {
-                    rectangle.height = 0;
-                } else {
-                    rectangle.width = 0;
+                if (building.isNeighbourDependent()) {
+                    // E.g. road or water pipes
+                    // Convert selection to straight line
+                    if (rectangle.width >= rectangle.height) {
+                        rectangle.height = 0;
+                    } else {
+                        rectangle.width = 0;
+                    }
                 }
-
-                building = Building.ROAD;
-                break;
-
-            case MouseEvent.BUTTON2:
-                building = Building.HOUSING_AREA;
                 break;
 
             case MouseEvent.BUTTON3:
@@ -98,10 +100,10 @@ public class CityLayer implements Layer<Building> {
 
         double price = building.getBuildingCost() * count(rectangle, null);
 
-        if (gameState.getMoney() < price) return false;
+        if (game.getMoney() < price) return false;
 
         replace(rectangle, null, building);
-        gameState.setMoney(gameState.getMoney() - price);
+        game.setMoney(game.getMoney() - price);
         return true;
     }
 

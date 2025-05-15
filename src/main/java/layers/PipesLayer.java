@@ -3,7 +3,7 @@ package layers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import other.Building;
-import other.GameState;
+import other.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -14,14 +14,14 @@ public class PipesLayer implements Layer<Boolean> {
     private final int height;
     protected boolean[][] buffer;
 
-    private GameState gameState;
+    private Game game;
 
 
-    public PipesLayer(@NotNull GameState gameState) {
-        this.gameState = gameState;
+    public PipesLayer(@NotNull Game game) {
+        this.game = game;
 
-        this.width = gameState.getMapWidth();
-        this.height = gameState.getMapHeight();
+        this.width = game.getMapWidth();
+        this.height = game.getMapHeight();
         buffer = new boolean[width][height];
     }
 
@@ -29,7 +29,7 @@ public class PipesLayer implements Layer<Boolean> {
     @Override
     public void draw(Graphics g, int xOffset, int yOffset, int width, int height) {
 
-        gameState.getCityMap().draw(g, xOffset, yOffset, width, height);
+        game.getCityMap().draw(g, xOffset, yOffset, width, height);
 
         // Clamp to not draw out of bounds
         int minX = Math.max(0, -xOffset);
@@ -61,14 +61,14 @@ public class PipesLayer implements Layer<Boolean> {
 
                 double price = Building.PIPES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
 
-                if (gameState.getMoney() < price) return false;
+                if (game.getMoney() < price) return false;
 
                 fill(rectangle, true);
-                gameState.setMoney(gameState.getMoney() - price);
+                game.setMoney(game.getMoney() - price);
                 return true;
 
             case MouseEvent.BUTTON3:
-                fill(rectangle, null);
+                fill(rectangle, false);
                 return true;
 
             default:

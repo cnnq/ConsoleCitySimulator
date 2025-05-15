@@ -1,11 +1,9 @@
-import other.Game;
-
-import java.awt.*;
+import gui.GameWindow;
 
 public class Main {
     public static void main(String[] args) {
 
-        Game game = new Game();
+        GameWindow gameWindow = new GameWindow();
 
     }
 }

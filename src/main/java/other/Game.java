@@ -1,86 +1,123 @@
 package other;
 
+import gui.GameWindow;
+import layers.*;
 import org.jetbrains.annotations.NotNull;
-import modes.EditMode;
-import modes.GameMode;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.Random;
 
 /**
- * Instance of one game session
+ * Instance of currently loaded game
  */
-public class Game extends JFrame implements Runnable {
+public class Game {
 
-    public static final int DEFAULT_WIDTH = 512 + 256;
-    public static final int DEFAULT_HEIGHT = 512 + 256;
-    public static final int DEFAULT_FPS = 20;
+    public static final int DEFAULT_MAP_SIZE = 200;
+    public static final int DEFAULT_CELL_SIZE = 64;
+    public static final double DEFAULT_WATER_LEVEL = 0.45;
+    public static final int TILE_SIZE = 32;
 
-    private GameState gameState;
-    private GameMode gameMode;
+    // Prices in thousands of dollars
+    public static final double DEFAULT_MONEY = 1000;
+    public static final double DEFAULT_RENT = 1;
 
-    private Thread thread;
+    private final GameWindow gameWindow;
 
-    private boolean running;
+    private final int mapWidth;
+    private final int mapHeight;
+
+    private final TopographyLayer topographyMap;
+    private final CityLayer cityMap;
+    private final PipesLayer pipesMap;
+    private final WiresLayer wiresMap;
+
+    private double money;
+
+    private static Random random = new Random();
 
 
-    public Game() {
-        super("Game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public Game(@NotNull GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
 
-        running = true;
+        mapWidth = DEFAULT_MAP_SIZE;
+        mapHeight = DEFAULT_MAP_SIZE;
 
-        gameState = new GameState();
-        changeGameMode(new EditMode(gameState));
+        topographyMap = new TopographyLayer(this, 10, DEFAULT_CELL_SIZE, DEFAULT_WATER_LEVEL);
+        cityMap = new CityLayer(this);
+        pipesMap = new PipesLayer(this);
+        wiresMap = new WiresLayer(this);
 
-        // Show
-        setVisible(true);
-
-        thread = new Thread(this);
-        thread.start();
+        money = DEFAULT_MONEY;
     }
 
-    @Override
-    public void run() {
-        // Repaint frame every 1/FPS ms
+    /**
+     * Update state of a game
+     * @param deltaTime time in seconds
+     */
+    public void update(float deltaTime) {
+        if (deltaTime < 0) throw new IllegalArgumentException("deltaTime cannot be negative");
 
-        final int targetNanos = 1_000_000_000 / DEFAULT_FPS;
+        int houses = 0;
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
 
-        long lastTime = System.nanoTime();
+                // Build house if close to road and with access to water pipes
+                if (cityMap.get(x, y) == Building.HOUSING_AREA &&
+                    cityMap.neighbours(x, y, Building.ROAD) &&
+                    pipesMap.neighbours(x, y, true) &&
+                    wiresMap.neighbours(x, y, true)) {
 
-        // run
-        while (running) {
+                    switch (random.nextInt(2)){
+                        case 0:
+                            cityMap.set(x, y, Building.HOUSE_1);
+                            break;
+                        case 1:
+                            cityMap.set(x, y, Building.HOUSE_2);
+                            break;
+                    }
+                }
 
-            gameState.update(1f / DEFAULT_FPS);
-            repaint();
-
-            long currentTime = System.nanoTime();
-
-            // wait
-            try {
-                long timeToWait = (targetNanos - currentTime + lastTime) / 1_000_000;
-                if (timeToWait > 0) Thread.sleep(timeToWait);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                running = false;
-                break;
+                if (cityMap.get(x, y) == Building.HOUSE_1 || cityMap.get(x, y) == Building.HOUSE_2) houses++;
             }
-
-            lastTime += targetNanos;
         }
+
+        money += houses * DEFAULT_RENT * deltaTime;
     }
 
-    @Override
-    public void paint(Graphics g) {
-        g.setColor(Color.PINK);
-        g.clearRect(0, 0, WIDTH, HEIGHT);
-        super.paint(g);
+    public GameWindow getGameWindow() {
+        return gameWindow;
     }
 
-    private void changeGameMode(@NotNull GameMode newGameMode) {
-        gameMode = newGameMode;
-        setContentPane(newGameMode.getContentPane());
-        pack();
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
+
+    public TopographyLayer getTopographyMap() {
+        return topographyMap;
+    }
+
+    public CityLayer getCityMap() {
+        return cityMap;
+    }
+
+    public PipesLayer getPipesMap() {
+        return pipesMap;
+    }
+
+    public WiresLayer getWiresMap() {
+        return wiresMap;
+    }
+
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
     }
 }

@@ -1,10 +1,11 @@
 package layers;
 
+import gui.GameWindow;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import other.Building;
-import other.GameState;
+import other.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -15,7 +16,7 @@ class CityLayerTest {
 
     @BeforeEach
     void setUp() {
-        cityLayer = new CityLayer(new GameState());
+        cityLayer = new CityLayer(new Game(new GameWindow()));
     }
 
 
@@ -36,28 +37,20 @@ class CityLayerTest {
         boolean success = cityLayer.edit(rectangle, MouseEvent.BUTTON1);
 
         Assertions.assertTrue(success);
-        Assertions.assertEquals(selected, cityLayer.count(rectangle, Building.ROAD));
+        Assertions.assertEquals(selected, cityLayer.count(rectangle, Building.HOUSE_1));
     }
 
     @Test
     void edit_button1_outOfBoundsNegative() {
         Rectangle rectangle = new Rectangle(-8, -12, 16, 24);
-        int selected = Math.max(rectangle.width + rectangle.x, rectangle.height + rectangle.y) + 1;
 
-        boolean success = cityLayer.edit(rectangle, MouseEvent.BUTTON1);
-
-        Assertions.assertTrue(success);
-        Assertions.assertEquals(selected, cityLayer.count(rectangle, Building.ROAD));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cityLayer.edit(rectangle, MouseEvent.BUTTON1));
     }
 
     @Test
     void edit_button1_outOfBoundsPositive() {
         Rectangle rectangle = new Rectangle(cityLayer.getWidth() - 8, cityLayer.getHeight() - 12, 16, 24);
-        int selected = Math.max(cityLayer.getWidth() - rectangle.x, cityLayer.getHeight() - rectangle.y);
 
-        boolean success = cityLayer.edit(rectangle, MouseEvent.BUTTON1);
-
-        Assertions.assertTrue(success);
-        Assertions.assertEquals(selected, cityLayer.count(rectangle, Building.ROAD));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cityLayer.edit(rectangle, MouseEvent.BUTTON1));
     }
 }

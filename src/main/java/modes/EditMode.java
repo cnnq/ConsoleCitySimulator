@@ -1,12 +1,9 @@
 package modes;
 
-import gui.BottomBar;
+import gui.*;
 import layers.Layer;
 import org.jetbrains.annotations.NotNull;
 import other.Game;
-import gui.MapPanel;
-import gui.TopBar;
-import other.GameState;
 
 import java.awt.*;
 
@@ -15,22 +12,22 @@ import java.awt.*;
  */
 public class EditMode extends GameMode {
 
-    private final GameState gameState;
+    private final Game game;
 
-    private final TopBar topBar;
+    private TopBar topBar;
     private final MapPanel map;
     private final BottomBar bottomBar;
 
     private Layer layer;
 
 
-    public EditMode(@NotNull GameState gameState) {
-        this.gameState = gameState;
-        layer = gameState.getCityMap();
+    public EditMode(@NotNull Game game) {
+        this.game = game;
+        layer = game.getCityMap();
 
         // Configure GUI
         Container container = new Container();
-        container.setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT));
+        container.setPreferredSize(new Dimension(GameWindow.DEFAULT_WIDTH, GameWindow.DEFAULT_HEIGHT));
 
         FlowLayout layout = new FlowLayout();
         layout.setHgap(0);
@@ -38,7 +35,7 @@ public class EditMode extends GameMode {
 
         container.setLayout(layout);
 
-        topBar = new TopBar(this);
+        topBar = new CityTopBar(this);
         map = new MapPanel(this);
         bottomBar = new BottomBar(this);
 
@@ -50,15 +47,35 @@ public class EditMode extends GameMode {
     }
 
     @NotNull
-    public GameState getGameState() {
-        return gameState;
+    public Game getGame() {
+        return game;
     }
 
+    public void setTopBar(@NotNull TopBar topBar) {
+        Container container = getContentPane();
+        container.remove(this.topBar);
+        container.add(topBar, 0);
+        container.revalidate();
+        this.topBar = topBar;
+    }
+
+    @NotNull
+    public TopBar getTopBar() {
+        return topBar;
+    }
+
+    /**
+     * Get currently edited layer
+     */
     @NotNull
     public Layer getLayer() {
         return layer;
     }
 
+    /**
+     * Set layer to be edited
+     * @param layer layer
+     */
     public void setLayer(@NotNull Layer layer) {
         this.layer = layer;
     }
