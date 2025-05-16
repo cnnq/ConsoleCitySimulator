@@ -28,6 +28,10 @@ public class Building {
     private static final double DEFAULT_PIPE_PRICE = 1;
     private static final double DEFAULT_WIRE_PRICE = 1;
 
+    private static final double SOLAR_PANEL_ELECTRICITY_PRODUCTIOIN = 10;
+    private static final double WATER_PUMP_WATER_PRODUCTION = 10;
+
+
     public static final Building WATER = new Building(null, 0);
     public static final Building HOUSING_AREA = new Building(new Color(44, 230, 83), DEFAULT_HOUSING_AREA_PRICE);
 
@@ -35,11 +39,11 @@ public class Building {
     public static final Building PIPES = new Building(defaultSpritemap, 0, 1, true, DEFAULT_PIPE_PRICE);
     public static final Building WIRES = new Building(Color.YELLOW, DEFAULT_WIRE_PRICE);
 
-    public static final Building SOLAR_PANELS = new Building(defaultSpritemap, 0, 2, false, DEFAULT_HOUSING_AREA_PRICE);
-    public static final Building WATER_PUMP = new Building(defaultSpritemap, 1, 2, false, DEFAULT_HOUSING_AREA_PRICE);
+    public static final Building SOLAR_PANELS = new Building(defaultSpritemap, 0, 2, false, DEFAULT_HOUSING_AREA_PRICE, 0, -SOLAR_PANEL_ELECTRICITY_PRODUCTIOIN);
+    public static final Building WATER_PUMP = new Building(defaultSpritemap, 1, 2, false, DEFAULT_HOUSING_AREA_PRICE, -WATER_PUMP_WATER_PRODUCTION, 0);
 
-    public static final Building HOUSE_1 = new Building(defaultSpritemap, 0, 3, false, DEFAULT_HOUSING_AREA_PRICE);
-    public static final Building HOUSE_2 = new Building(defaultSpritemap, 1, 3, false, DEFAULT_HOUSING_AREA_PRICE);
+    public static final Building HOUSE_1 = new Building(defaultSpritemap, 0, 3, false, DEFAULT_HOUSING_AREA_PRICE, 1, 1);
+    public static final Building HOUSE_2 = new Building(defaultSpritemap, 1, 3, false, DEFAULT_HOUSING_AREA_PRICE, 2, 2);
 
 
     private final Image spritemap;
@@ -50,6 +54,8 @@ public class Building {
     private Color color;
 
     private double buildingCost;
+    private double waterUsage;
+    private double electricityUsage;
 
     /**
      * Create instance of building
@@ -58,8 +64,10 @@ public class Building {
      * @param spritemapY y tile coordinate in spritemap
      * @param neighbourDependent should look of a tile differ depending on neighbouring tiles
      * @param buildingCost cost of building
+     * @param waterUsage usage of water, negative values mean production
+     * @param electricityUsage usage of electricity, negative values mean production
      */
-    private Building(@Nullable Image spritemap, @Range(from = 0, to = Integer.MAX_VALUE) int spritemapX, @Range(from = 0, to = Integer.MAX_VALUE) int spritemapY, boolean neighbourDependent, double buildingCost) {
+    private Building(@Nullable Image spritemap, @Range(from = 0, to = Integer.MAX_VALUE) int spritemapX, @Range(from = 0, to = Integer.MAX_VALUE) int spritemapY, boolean neighbourDependent, double buildingCost, double waterUsage, double electricityUsage) {
         if (buildingCost < 0) throw new IllegalArgumentException("buildingCost cannot be negative");
 
         this.spritemap = spritemap;
@@ -68,6 +76,12 @@ public class Building {
         this.neighbourDependent = neighbourDependent;
 
         this.buildingCost = buildingCost;
+        this.waterUsage = waterUsage;
+        this.electricityUsage = electricityUsage;
+    }
+
+    private Building(@Nullable Image spritemap, @Range(from = 0, to = Integer.MAX_VALUE) int spritemapX, @Range(from = 0, to = Integer.MAX_VALUE) int spritemapY, boolean neighbourDependent, double buildingCost) {
+        this(spritemap, spritemapX, spritemapY, neighbourDependent, buildingCost, 0, 0);
     }
 
     /**
@@ -76,7 +90,7 @@ public class Building {
      * @param buildingCost cost of building
      */
     private Building(@Nullable Color color, double buildingCost) {
-        this(null, 0, 0, false, buildingCost);
+        this(null, 0, 0, false, buildingCost, 0, 0);
 
         this.color = color;
     }
@@ -127,5 +141,19 @@ public class Building {
 
     public double getBuildingCost() {
         return buildingCost;
+    }
+
+    /**
+     * Returns water usage, negative value mean production
+     */
+    public double getWaterUsage() {
+        return waterUsage;
+    }
+
+    /**
+     * Returns electricity usage, negative value mean production
+     */
+    public double getElectricityUsage() {
+        return electricityUsage;
     }
 }

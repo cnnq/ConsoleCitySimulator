@@ -56,7 +56,11 @@ public class Game {
     public void update(float deltaTime) {
         if (deltaTime < 0) throw new IllegalArgumentException("deltaTime cannot be negative");
 
+        WaterStats waterStats = getWaterStats();
+        ElectricityStats electricityStats = getElectricityStats();
+
         int houses = 0;
+
         for (int x = 0; x < cityMap.getWidth(); x++) {
             for (int y = 0; y < cityMap.getHeight(); y++) {
 
@@ -66,16 +70,24 @@ public class Game {
                     pipesMap.neighbours(x, y, true) &&
                     wiresMap.neighbours(x, y, true)) {
 
-                    switch (random.nextInt(2)){
-                        case 0:
-                            cityMap.set(x, y, Building.HOUSE_1);
-                            break;
-                        case 1:
-                            cityMap.set(x, y, Building.HOUSE_2);
-                            break;
+                    // Choose random house
+                    Building building = switch (random.nextInt(2)) {
+                        case 0 -> Building.HOUSE_1;
+                        default -> Building.HOUSE_2;
+                    };
+
+                    // Build only if enough water and electricity
+                    if (waterStats.usage() + building.getWaterUsage() <= waterStats.production() &&
+                        electricityStats.usage() + building.getElectricityUsage() <= electricityStats.production()) {
+                        cityMap.set(x, y, building);
+
+                        // Update stats
+                        waterStats = new WaterStats(waterStats.usage() + building.getWaterUsage(), waterStats.production());
+                        electricityStats = new ElectricityStats(electricityStats.usage() + building.getElectricityUsage(), electricityStats.production());
                     }
                 }
 
+                // Count houses
                 if (cityMap.get(x, y) == Building.HOUSE_1 || cityMap.get(x, y) == Building.HOUSE_2) houses++;
             }
         }
@@ -119,5 +131,42 @@ public class Game {
 
     public void setMoney(double money) {
         this.money = money;
+    }
+
+
+    public WaterStats getWaterStats() {
+        double usage = 0;
+        double production = 0;
+
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
+                Building building = cityMap.get(x, y);
+                if (building == null) continue;
+
+                double waterUsage = building.getWaterUsage();
+
+                if (waterUsage > 0) usage += waterUsage;
+                else production -= waterUsage;
+            }
+        }
+        return new WaterStats(usage, production);
+    }
+
+    public ElectricityStats getElectricityStats() {
+        double usage = 0;
+        double production = 0;
+
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
+                Building building = cityMap.get(x, y);
+                if (building == null) continue;
+
+                double electricityUsage = building.getElectricityUsage();
+
+                if (electricityUsage > 0) usage += electricityUsage;
+                else production -= electricityUsage;
+            }
+        }
+        return new ElectricityStats(usage, production);
     }
 }
