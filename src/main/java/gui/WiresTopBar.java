@@ -2,7 +2,7 @@ package gui;
 
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
-import other.Building;
+import other.Infrastructure;
 import other.ElectricityStats;
 import other.Game;
 
@@ -15,7 +15,7 @@ public class WiresTopBar extends TopBar {
     private JLabel electricityProductionLabel;
     private JLabel moneyLabel;
 
-    private Building choosenBuilding;
+    private Infrastructure choosenInfrastructure;
 
 
     public WiresTopBar(@NotNull EditMode editMode) {

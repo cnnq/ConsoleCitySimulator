@@ -65,30 +65,30 @@ public class Game {
             for (int y = 0; y < cityMap.getHeight(); y++) {
 
                 // Build house if close to road and with access to water pipes
-                if (cityMap.get(x, y) == Building.HOUSING_AREA &&
-                    cityMap.neighbours(x, y, Building.ROAD) &&
+                if (cityMap.get(x, y) == Infrastructure.HOUSING_AREA &&
+                    cityMap.neighbours(x, y, Infrastructure.ROAD) &&
                     pipesMap.neighbours(x, y, true) &&
                     wiresMap.neighbours(x, y, true)) {
 
                     // Choose random house
-                    Building building = switch (random.nextInt(2)) {
-                        case 0 -> Building.HOUSE_1;
-                        default -> Building.HOUSE_2;
+                    House house = switch (random.nextInt(2)) {
+                        case 0 -> House.HOUSE_1;
+                        default -> House.HOUSE_2;
                     };
 
                     // Build only if enough water and electricity
-                    if (waterStats.usage() + building.getWaterUsage() <= waterStats.production() &&
-                        electricityStats.usage() + building.getElectricityUsage() <= electricityStats.production()) {
-                        cityMap.set(x, y, building);
+                    if (waterStats.usage() + house.getWaterUsage() <= waterStats.production() &&
+                        electricityStats.usage() + house.getElectricityUsage() <= electricityStats.production()) {
+                        cityMap.set(x, y, house);
 
                         // Update stats
-                        waterStats = new WaterStats(waterStats.usage() + building.getWaterUsage(), waterStats.production());
-                        electricityStats = new ElectricityStats(electricityStats.usage() + building.getElectricityUsage(), electricityStats.production());
+                        waterStats = new WaterStats(waterStats.usage() + house.getWaterUsage(), waterStats.production());
+                        electricityStats = new ElectricityStats(electricityStats.usage() + house.getElectricityUsage(), electricityStats.production());
                     }
                 }
 
                 // Count houses
-                if (cityMap.get(x, y) == Building.HOUSE_1 || cityMap.get(x, y) == Building.HOUSE_2) houses++;
+                if (cityMap.get(x, y) instanceof House) houses++;
             }
         }
 
@@ -140,8 +140,8 @@ public class Game {
 
         for (int x = 0; x < cityMap.getWidth(); x++) {
             for (int y = 0; y < cityMap.getHeight(); y++) {
-                Building building = cityMap.get(x, y);
-                if (building == null) continue;
+                Infrastructure infrastructure = cityMap.get(x, y);
+                if(!(infrastructure instanceof Building building)) continue;
 
                 double waterUsage = building.getWaterUsage();
 
@@ -158,8 +158,8 @@ public class Game {
 
         for (int x = 0; x < cityMap.getWidth(); x++) {
             for (int y = 0; y < cityMap.getHeight(); y++) {
-                Building building = cityMap.get(x, y);
-                if (building == null) continue;
+                Infrastructure infrastructure = cityMap.get(x, y);
+                if (!(infrastructure instanceof Building building)) continue;
 
                 double electricityUsage = building.getElectricityUsage();
 

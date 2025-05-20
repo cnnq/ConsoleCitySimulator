@@ -2,7 +2,7 @@ package gui;
 
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
-import other.Building;
+import other.Infrastructure;
 import other.Game;
 import other.WaterStats;
 
@@ -15,7 +15,7 @@ public class PipesTopBar extends TopBar {
     private JLabel waterProductionLabel;
     private JLabel moneyLabel;
 
-    private Building choosenBuilding;
+    private Infrastructure choosenInfrastructure;
 
 
     public PipesTopBar(@NotNull EditMode editMode) {
