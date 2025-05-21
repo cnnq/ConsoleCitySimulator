@@ -34,11 +34,11 @@ public class PipesTopBar extends TopBar {
     public void paint(Graphics g) {
         Game game = getEditMode().getGame();
         WaterStats waterStats = game.getWaterStats();
-        double money = game.getMoney();
+        double money = Math.round(game.getMoney());
 
         waterUsageLabel.setText("Usage: " + Double.toString(Math.round(waterStats.usage())) + " ");
         waterProductionLabel.setText("Production: " + Double.toString(Math.round(waterStats.production())) + " ");
-        moneyLabel.setText("Money: " + Double.toString(Math.round(money)) + "k $");
+        moneyLabel.setText("Money: " + money + "k $");
 
         super.paint(g);
     }

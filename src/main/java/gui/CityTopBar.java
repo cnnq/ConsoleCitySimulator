@@ -2,8 +2,7 @@ package gui;
 
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
-import other.Building;
-import other.Infrastructure;
+import other.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +15,7 @@ public class CityTopBar extends TopBar {
     private final JButton waterPumpButton;
 
     private JLabel moneyLabel;
+    private JLabel populationLabel;
 
     private Infrastructure choosenInfrastructure;
 
@@ -51,14 +51,22 @@ public class CityTopBar extends TopBar {
         add(solarPanelButton);
         add(waterPumpButton);
 
+        populationLabel = new JLabel("Population: error", JLabel.CENTER);
         moneyLabel = new JLabel("Money: error", JLabel.CENTER);
 
+        add(populationLabel);
         add(moneyLabel);
     }
 
     @Override
     public void paint(Graphics g) {
-        moneyLabel.setText("Money: " + Double.toString(Math.round(getEditMode().getGame().getMoney())) + "k $");
+        Game game = getEditMode().getGame();
+        PopulationStats populationStats = game.getPopulationStats();
+        double money = Math.round(game.getMoney());
+
+        populationLabel.setText("Population: " + populationStats.population() + " / " + populationStats.capacity() + " ");
+        moneyLabel.setText("Money: " + money + "k $");
+
         super.paint(g);
     }
 

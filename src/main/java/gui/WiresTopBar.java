@@ -34,11 +34,11 @@ public class WiresTopBar extends TopBar {
     public void paint(Graphics g) {
         Game game = getEditMode().getGame();
         ElectricityStats electricityStats = game.getElectricityStats();
-        double money = game.getMoney();
+        double money = Math.round(game.getMoney());
 
         electricityUsageLabel.setText("Usage: " + Double.toString(Math.round(electricityStats.usage())) + " ");
         electricityProductionLabel.setText("Production: " + Double.toString(Math.round(electricityStats.production())) + " ");
-        moneyLabel.setText("Money: " + Double.toString(Math.round(money)) + "k $");
+        moneyLabel.setText("Money: " + money + "k $");
 
         super.paint(g);
     }

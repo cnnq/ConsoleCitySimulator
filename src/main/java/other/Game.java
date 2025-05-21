@@ -18,19 +18,28 @@ public class Game {
 
     // Prices in thousands of dollars
     public static final double DEFAULT_MONEY = 1000;
-    public static final double DEFAULT_RENT = 1;
+    public static final double DEFAULT_RENT = 0.1;
 
+    private static final double MIGRATION_FACTOR = 1;
+
+    //
     private final GameWindow gameWindow;
 
     private final int mapWidth;
     private final int mapHeight;
 
+    // Layers
     private final TopographyLayer topographyMap;
     private final CityLayer cityMap;
     private final PipesLayer pipesMap;
     private final WiresLayer wiresMap;
 
+    // Systems
+    UrbanizationSystem urbanizationSystem;
+
+    // Data
     private double money;
+    private int population;
 
     private static Random random = new Random();
 
@@ -46,6 +55,8 @@ public class Game {
         pipesMap = new PipesLayer(this);
         wiresMap = new WiresLayer(this);
 
+        urbanizationSystem = new UrbanizationSystem(this);
+
         money = DEFAULT_MONEY;
     }
 
@@ -54,45 +65,20 @@ public class Game {
      * @param deltaTime time in seconds
      */
     public void update(float deltaTime) {
-        if (deltaTime < 0) throw new IllegalArgumentException("deltaTime cannot be negative");
 
-        WaterStats waterStats = getWaterStats();
-        ElectricityStats electricityStats = getElectricityStats();
+        // Build / destroy houses
+        urbanizationSystem.update(deltaTime);
 
-        int houses = 0;
+        // Migration
+        PopulationStats populationStats = getPopulationStats();
 
-        for (int x = 0; x < cityMap.getWidth(); x++) {
-            for (int y = 0; y < cityMap.getHeight(); y++) {
+        int actualMigrationFactor = (int)MIGRATION_FACTOR + (random.nextDouble() < (MIGRATION_FACTOR - Math.floor(MIGRATION_FACTOR)) ? 1 : 0);
 
-                // Build house if close to road and with access to water pipes
-                if (cityMap.get(x, y) == Infrastructure.HOUSING_AREA &&
-                    cityMap.neighbours(x, y, Infrastructure.ROAD) &&
-                    pipesMap.neighbours(x, y, true) &&
-                    wiresMap.neighbours(x, y, true)) {
+        if (populationStats.population() > populationStats.capacity()) population -= actualMigrationFactor;
+        if (populationStats.population() < populationStats.capacity()) population += actualMigrationFactor;
 
-                    // Choose random house
-                    House house = switch (random.nextInt(2)) {
-                        case 0 -> House.HOUSE_1;
-                        default -> House.HOUSE_2;
-                    };
-
-                    // Build only if enough water and electricity
-                    if (waterStats.usage() + house.getWaterUsage() <= waterStats.production() &&
-                        electricityStats.usage() + house.getElectricityUsage() <= electricityStats.production()) {
-                        cityMap.set(x, y, house);
-
-                        // Update stats
-                        waterStats = new WaterStats(waterStats.usage() + house.getWaterUsage(), waterStats.production());
-                        electricityStats = new ElectricityStats(electricityStats.usage() + house.getElectricityUsage(), electricityStats.production());
-                    }
-                }
-
-                // Count houses
-                if (cityMap.get(x, y) instanceof House) houses++;
-            }
-        }
-
-        money += houses * DEFAULT_RENT * deltaTime;
+        // Gather taxes
+        money += deltaTime * population * DEFAULT_RENT;
     }
 
     public GameWindow getGameWindow() {
@@ -168,5 +154,19 @@ public class Game {
             }
         }
         return new ElectricityStats(usage, production);
+    }
+
+    public PopulationStats getPopulationStats() {
+        int capacity = 0;
+
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
+                Infrastructure infrastructure = cityMap.get(x, y);
+                if (!(infrastructure instanceof House house)) continue;
+
+                capacity += house.getCapacity();
+            }
+        }
+        return new PopulationStats(population, capacity);
     }
 }
