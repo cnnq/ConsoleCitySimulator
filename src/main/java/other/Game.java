@@ -1,6 +1,12 @@
 package other;
 
+import data.ElectricityStats;
+import data.PopulationStats;
+import data.WaterStats;
 import gui.GameWindow;
+import infrastructure.Building;
+import infrastructure.House;
+import infrastructure.Infrastructure;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,12 +20,13 @@ public class Game {
     public static final int DEFAULT_MAP_SIZE = 200;
     public static final int DEFAULT_CELL_SIZE = 64;
     public static final double DEFAULT_WATER_LEVEL = 0.45;
-    public static final int TILE_SIZE = 32;
 
     // Prices in thousands of dollars
     public static final double DEFAULT_MONEY = 1000;
-    public static final double DEFAULT_RENT = 0.1;
+    public static final double DEFAULT_TAX = 0.1;
+    private static final double MINIMAL_WAGE = 1;
 
+    //
     private static final double MIGRATION_FACTOR = 1;
 
     //
@@ -41,6 +48,8 @@ public class Game {
     private double money;
     private int population;
 
+    private double tax;
+
     private static Random random = new Random();
 
 
@@ -58,6 +67,7 @@ public class Game {
         urbanizationSystem = new UrbanizationSystem(this);
 
         money = DEFAULT_MONEY;
+        tax = DEFAULT_TAX;
     }
 
     /**
@@ -78,7 +88,7 @@ public class Game {
         if (populationStats.population() < populationStats.capacity()) population += actualMigrationFactor;
 
         // Gather taxes
-        money += deltaTime * population * DEFAULT_RENT;
+        money += deltaTime * population * MINIMAL_WAGE / 30.5 * tax;
     }
 
     public GameWindow getGameWindow() {
@@ -117,6 +127,14 @@ public class Game {
 
     public void setMoney(double money) {
         this.money = money;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
     }
 
 

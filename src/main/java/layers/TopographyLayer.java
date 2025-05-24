@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import other.Game;
 import other.PerlinNoise;
+import other.Sprite;
 
 import java.awt.*;
 import java.util.Random;
@@ -91,7 +92,7 @@ public class TopographyLayer implements Layer<Double> {
                 } */
 
                 g.setColor(getColor(get(tileX, tileY)));
-                g.fillRect(displayedTileX * Game.TILE_SIZE, displayedTileY * Game.TILE_SIZE, Game.TILE_SIZE, Game.TILE_SIZE);
+                g.fillRect(displayedTileX * Sprite.DEFAULT_SPRITE_SIZE, displayedTileY * Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE);
             }
         }
     }

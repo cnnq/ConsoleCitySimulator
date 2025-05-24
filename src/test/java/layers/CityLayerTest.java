@@ -4,8 +4,7 @@ import gui.GameWindow;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import other.House;
-import other.Infrastructure;
+import infrastructure.House;
 import other.Game;
 
 import java.awt.*;

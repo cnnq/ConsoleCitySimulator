@@ -1,5 +1,10 @@
 package other;
 
+import data.ElectricityStats;
+import data.WaterStats;
+import infrastructure.Building;
+import infrastructure.House;
+import infrastructure.Infrastructure;
 import layers.CityLayer;
 import layers.PipesLayer;
 import layers.WiresLayer;

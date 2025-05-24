@@ -2,7 +2,7 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import other.Infrastructure;
+import infrastructure.Infrastructure;
 import other.Game;
 
 import java.awt.*;

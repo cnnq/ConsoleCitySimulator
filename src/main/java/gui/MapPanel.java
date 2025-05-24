@@ -1,8 +1,8 @@
 package gui;
 
 import org.jetbrains.annotations.NotNull;
-import other.Game;
 import modes.EditMode;
+import other.Sprite;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +25,8 @@ public class MapPanel extends JPanel implements MouseListener, MouseMotionListen
         this.editMode = editMode;
 
         // Set view to center of the map
-        xOffset = (editMode.getLayer().getWidth() - GameWindow.DEFAULT_WIDTH / Game.TILE_SIZE) / 2;
-        yOffset = (editMode.getLayer().getHeight() - (GameWindow.DEFAULT_HEIGHT - 64) / Game.TILE_SIZE) / 2;
+        xOffset = (editMode.getLayer().getWidth() - GameWindow.DEFAULT_WIDTH / Sprite.DEFAULT_SPRITE_SIZE) / 2;
+        yOffset = (editMode.getLayer().getHeight() - (GameWindow.DEFAULT_HEIGHT - 64) / Sprite.DEFAULT_SPRITE_SIZE) / 2;
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -40,7 +40,7 @@ public class MapPanel extends JPanel implements MouseListener, MouseMotionListen
         super.paintComponent(g);
 
         // Draw layer
-        editMode.getLayer().draw(g, xOffset, yOffset, getWidth() / Game.TILE_SIZE, getHeight() / Game.TILE_SIZE);
+        editMode.getLayer().draw(g, xOffset, yOffset, getWidth() / Sprite.DEFAULT_SPRITE_SIZE, getHeight() / Sprite.DEFAULT_SPRITE_SIZE);
 
         // Draw selected area
         if (selectionFrom != null && selectionTo != null) {
@@ -49,10 +49,10 @@ public class MapPanel extends JPanel implements MouseListener, MouseMotionListen
             Point a = new Point(Math.min(selectionFrom.x, selectionTo.x), Math.min(selectionFrom.y, selectionTo.y));
             Point b = new Point(Math.max(selectionFrom.x, selectionTo.x), Math.max(selectionFrom.y, selectionTo.y));
 
-            g.fillRect((a.x - xOffset) * Game.TILE_SIZE,
-                    (a.y - yOffset) * Game.TILE_SIZE,
-                    (b.x - a.x + 1) * Game.TILE_SIZE,
-                    (b.y - a.y + 1) * Game.TILE_SIZE);
+            g.fillRect((a.x - xOffset) * Sprite.DEFAULT_SPRITE_SIZE,
+                    (a.y - yOffset) * Sprite.DEFAULT_SPRITE_SIZE,
+                    (b.x - a.x + 1) * Sprite.DEFAULT_SPRITE_SIZE,
+                    (b.y - a.y + 1) * Sprite.DEFAULT_SPRITE_SIZE);
         }
     }
 
@@ -140,7 +140,7 @@ public class MapPanel extends JPanel implements MouseListener, MouseMotionListen
     }
 
     private Point getTilePosition(MouseEvent e) {
-        return new Point(Math.clamp(e.getX() / Game.TILE_SIZE + xOffset, 0, editMode.getLayer().getWidth() - 1),
-                         Math.clamp(e.getY() / Game.TILE_SIZE + yOffset, 0, editMode.getLayer().getHeight() - 1));
+        return new Point(Math.clamp(e.getX() / Sprite.DEFAULT_SPRITE_SIZE + xOffset, 0, editMode.getLayer().getWidth() - 1),
+                         Math.clamp(e.getY() / Sprite.DEFAULT_SPRITE_SIZE + yOffset, 0, editMode.getLayer().getHeight() - 1));
     }
 }

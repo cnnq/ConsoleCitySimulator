@@ -4,7 +4,7 @@ import gui.CityTopBar;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import other.Infrastructure;
+import infrastructure.Infrastructure;
 import other.Directions;
 import other.Game;
 
@@ -62,7 +62,8 @@ public class CityLayer implements Layer<Infrastructure> {
                 Infrastructure infrastructure = get(x + xOffset, y + yOffset);
                 if (infrastructure == null) continue;
 
-                EnumSet<Directions> neighbourData = null;
+                // Avoid unnecessary checks
+                EnumSet<Directions> neighbourData = EnumSet.noneOf(Directions.class);
                 if (infrastructure.isNeighbourDependent()) neighbourData = getNeighbourData(x + xOffset, y + yOffset, infrastructure);
 
                 infrastructure.draw(g, x, y, neighbourData);

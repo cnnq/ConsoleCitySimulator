@@ -1,5 +1,8 @@
 package gui;
 
+import data.PopulationStats;
+import infrastructure.Building;
+import infrastructure.Infrastructure;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
 import other.*;
@@ -9,13 +12,18 @@ import java.awt.*;
 
 public class CityTopBar extends TopBar {
 
+    public static int TAX_STEPS = 20;
+
     private final JButton roadButton;
     private final JButton housingAreaButton;
     private final JButton solarPanelButton;
     private final JButton waterPumpButton;
 
-    private JLabel moneyLabel;
+    private JLabel taxLabel;
+    private JSlider taxSlider;
+
     private JLabel populationLabel;
+    private JLabel moneyLabel;
 
     private Infrastructure choosenInfrastructure;
 
@@ -23,12 +31,18 @@ public class CityTopBar extends TopBar {
     public CityTopBar(@NotNull EditMode editMode) {
         super(editMode);
 
-        roadButton = new JButton("Road");
-        housingAreaButton = new JButton("House");
-        solarPanelButton = new JButton("Solar panel");
-        waterPumpButton = new JButton("Water pump");
-
         choosenInfrastructure = Infrastructure.ROAD;
+
+        // Buttons
+        roadButton = new JButton(Sprite.STRAIGHT_HORIZONTAL_ROAD);
+        housingAreaButton = new JButton(Sprite.HOUSE_2);
+        solarPanelButton = new JButton(Sprite.SOLAR_PANELS);
+        waterPumpButton = new JButton(Sprite.WATER_PUMP);
+
+        roadButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
+        housingAreaButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
+        solarPanelButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
+        waterPumpButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
 
         roadButton.addActionListener(e -> {
             choosenInfrastructure = Infrastructure.ROAD;
@@ -51,6 +65,17 @@ public class CityTopBar extends TopBar {
         add(solarPanelButton);
         add(waterPumpButton);
 
+        // Labels
+        taxLabel = new JLabel("Tax: error", JLabel.CENTER);
+        taxSlider = new JSlider(JSlider.HORIZONTAL, 0, TAX_STEPS, TAX_STEPS / 10);
+
+        taxSlider.addChangeListener(e -> {
+            getEditMode().getGame().setTax((double)taxSlider.getValue() / TAX_STEPS);
+        });
+
+        add(taxLabel);
+        add(taxSlider);
+
         populationLabel = new JLabel("Population: error", JLabel.CENTER);
         moneyLabel = new JLabel("Money: error", JLabel.CENTER);
 
@@ -62,10 +87,10 @@ public class CityTopBar extends TopBar {
     public void paint(Graphics g) {
         Game game = getEditMode().getGame();
         PopulationStats populationStats = game.getPopulationStats();
-        double money = Math.round(game.getMoney());
 
+        taxLabel.setText("Tax: " + (int)(game.getTax() * 100) + "% ");
         populationLabel.setText("Population: " + populationStats.population() + " / " + populationStats.capacity() + " ");
-        moneyLabel.setText("Money: " + money + "k $");
+        moneyLabel.setText("Money: " + String.format("%.1f", game.getMoney()) + "k $");
 
         super.paint(g);
     }
