@@ -11,12 +11,18 @@ public class Infrastructure {
 
     // Prices in thousands of dollars
     private static final double DEFAULT_ROAD_PRICE = 10;
+
     protected static final double DEFAULT_HOUSING_AREA_PRICE = 10;
+    protected static final double DEFAULT_COMMERCIAL_AREA_PRICE = 5;
+    protected static final double DEFAULT_INDUSTRIAL_AREA_PRICE = 10;
+
     private static final double DEFAULT_PIPE_PRICE = 1;
     private static final double DEFAULT_WIRE_PRICE = 1;
 
     public static final Infrastructure WATER = new Infrastructure(null, 0);
-    public static final Infrastructure HOUSING_AREA = new Infrastructure(new Color(44, 230, 83), DEFAULT_HOUSING_AREA_PRICE);
+    public static final Infrastructure HOUSING_AREA = new Infrastructure(new Color(40, 240, 80), DEFAULT_HOUSING_AREA_PRICE);
+    public static final Infrastructure COMMERCIAL_AREA = new Infrastructure(new Color(40, 200, 200), DEFAULT_COMMERCIAL_AREA_PRICE);
+    public static final Infrastructure INDUSTRIAL_AREA = new Infrastructure(new Color(150, 180, 40), DEFAULT_INDUSTRIAL_AREA_PRICE);
 
     public static final Infrastructure ROAD = new Infrastructure(Sprite.ROAD, Color.BLACK, DEFAULT_ROAD_PRICE);
     public static final Infrastructure PIPES = new Infrastructure(Sprite.PIPES, Color.GRAY, DEFAULT_PIPE_PRICE);

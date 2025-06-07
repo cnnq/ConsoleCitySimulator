@@ -16,6 +16,8 @@ public class CityTopBar extends TopBar {
 
     private final JButton roadButton;
     private final JButton housingAreaButton;
+    private final JButton commercialAreaButton;
+    private final JButton industrialAreaButton;
     private final JButton solarPanelButton;
     private final JButton waterPumpButton;
 
@@ -33,23 +35,39 @@ public class CityTopBar extends TopBar {
 
         choosenInfrastructure = Infrastructure.ROAD;
 
-        // Buttons
+        // === Buttons ===
         roadButton = new JButton(Sprite.STRAIGHT_HORIZONTAL_ROAD);
+
         housingAreaButton = new JButton(Sprite.HOUSE_2);
+        commercialAreaButton = new JButton(Sprite.SHOP_1);
+        industrialAreaButton = new JButton(Sprite.FACTORY_1);
+
         solarPanelButton = new JButton(Sprite.SOLAR_PANELS);
         waterPumpButton = new JButton(Sprite.WATER_PUMP);
 
+        // Set preferred sizes
         roadButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
         housingAreaButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
+        commercialAreaButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
+        industrialAreaButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
         solarPanelButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
         waterPumpButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
 
+        // Add action listeners
         roadButton.addActionListener(e -> {
             choosenInfrastructure = Infrastructure.ROAD;
         });
 
         housingAreaButton.addActionListener(e -> {
             choosenInfrastructure = Infrastructure.HOUSING_AREA;
+        });
+
+        commercialAreaButton.addActionListener(e -> {
+            choosenInfrastructure = Infrastructure.COMMERCIAL_AREA;
+        });
+
+        industrialAreaButton.addActionListener(e -> {
+            choosenInfrastructure = Infrastructure.INDUSTRIAL_AREA;
         });
 
         solarPanelButton.addActionListener(e -> {
@@ -60,12 +78,15 @@ public class CityTopBar extends TopBar {
             choosenInfrastructure = Building.WATER_PUMP;
         });
 
+        // Add components
         add(roadButton);
         add(housingAreaButton);
+        add(commercialAreaButton);
+        add(industrialAreaButton);
         add(solarPanelButton);
         add(waterPumpButton);
 
-        // Labels
+        // === Labels ===
         taxLabel = new JLabel("Tax: error", JLabel.CENTER);
         taxSlider = new JSlider(JSlider.HORIZONTAL, 0, TAX_STEPS, TAX_STEPS / 10);
 

@@ -22,6 +22,12 @@ public class Sprite implements Icon {
     public static final Sprite HOUSE_1 = new Sprite(Spritemap.DEFAULT, 0, 3, false);
     public static final Sprite HOUSE_2 = new Sprite(Spritemap.DEFAULT, 1, 3, false);
 
+    public static final Sprite SHOP_1 = new Sprite(Spritemap.DEFAULT, 0, 4, false);
+    public static final Sprite SHOP_2 = new Sprite(Spritemap.DEFAULT, 1, 4, false);
+
+    public static final Sprite FACTORY_1 = new Sprite(Spritemap.DEFAULT, 0, 5, false);
+
+
     private final Spritemap spritemap;
     private final int spritemapX;
     private final int spritemapY;

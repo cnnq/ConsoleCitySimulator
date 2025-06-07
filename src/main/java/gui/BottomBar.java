@@ -10,6 +10,10 @@ public class BottomBar extends JMenuBar {
 
     private static final int BOTTOM_BAR_HEIGHT = 32;
 
+    private final TopBar cityTopBar;
+    private final TopBar pipesTopBar;
+    private final TopBar wiresTopBar;
+
     private final JButton cityEditButton;
     private final JButton pipesEditButton;
     private final JButton wiresEditButton;
@@ -19,22 +23,26 @@ public class BottomBar extends JMenuBar {
         setPreferredSize(new Dimension(GameWindow.DEFAULT_WIDTH, BOTTOM_BAR_HEIGHT));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+        cityTopBar = new CityTopBar(editMode);
+        pipesTopBar = new PipesTopBar(editMode);
+        wiresTopBar = new WiresTopBar(editMode);
+
         cityEditButton = new JButton("Edit city");
         pipesEditButton = new JButton("Edit pipes");
         wiresEditButton = new JButton("Edit wires");
 
         cityEditButton.addActionListener(e -> {
-            editMode.setTopBar(new CityTopBar(editMode));
+            editMode.setTopBar(cityTopBar);
             editMode.setLayer(editMode.getGame().getCityMap());
         });
 
         pipesEditButton.addActionListener(e -> {
-            editMode.setTopBar(new PipesTopBar(editMode));
+            editMode.setTopBar(pipesTopBar);
             editMode.setLayer(editMode.getGame().getPipesMap());
         });
 
         wiresEditButton.addActionListener(e -> {
-            editMode.setTopBar(new WiresTopBar(editMode));
+            editMode.setTopBar(wiresTopBar);
             editMode.setLayer(editMode.getGame().getWiresMap());
         });
 
