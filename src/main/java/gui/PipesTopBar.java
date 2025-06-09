@@ -2,8 +2,7 @@ package gui;
 
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
-import infrastructure.Infrastructure;
-import other.Game;
+import main.Game;
 import data.WaterStats;
 
 import javax.swing.*;

@@ -3,7 +3,7 @@ package gui;
 import org.jetbrains.annotations.NotNull;
 import modes.EditMode;
 import modes.GameMode;
-import other.Game;
+import main.Game;
 
 import javax.swing.*;
 import java.awt.*;

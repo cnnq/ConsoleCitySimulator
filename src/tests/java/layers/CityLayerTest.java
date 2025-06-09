@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import infrastructure.House;
-import other.Game;
+import main.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,19 +27,6 @@ class CityLayerTest {
         boolean success = cityLayer.edit(rectangle, MouseEvent.NOBUTTON);
 
         Assertions.assertFalse(success);
-    }
-
-    @Test
-    void edit_button1() {
-        // This test is wrong
-        // Selected area can contain tiles that won't be replaced
-        Rectangle rectangle = new Rectangle(0, 0, 16, 24);
-        int selected = Math.max(rectangle.width, rectangle.height) + 1;
-
-        boolean success = cityLayer.edit(rectangle, MouseEvent.BUTTON1);
-
-        Assertions.assertTrue(success);
-        Assertions.assertEquals(selected, cityLayer.count(rectangle, House.HOUSE_1));
     }
 
     @Test

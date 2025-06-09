@@ -2,7 +2,7 @@ package infrastructure;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-import other.Sprite;
+import graphics.Sprite;
 
 import java.awt.*;
 
@@ -18,18 +18,16 @@ public class UnmanagedBuilding extends UnmanagedInfrastructure implements Buildi
     /**
      * Create instance of building
      * @param sprite
-     * @param defaultColor color to display if sprite is null or null if you want transparent tile
      * @param buildingCost cost of building
      * @param waterUsage usage of water, negative values mean production
      * @param electricityUsage usage of electricity, negative values mean production
      */
     protected UnmanagedBuilding(@Nullable Sprite sprite,
-                                @Nullable Color defaultColor,
                                 double buildingCost,
                                 @Range(from = 0, to = Integer.MAX_VALUE) int capacity,
                                 double waterUsage, double electricityUsage) {
 
-        super(sprite, defaultColor, buildingCost);
+        super(sprite, buildingCost);
 
         if (capacity < 0) throw new IllegalArgumentException("capacity cannot be negative");
 

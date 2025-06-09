@@ -7,15 +7,20 @@ import layers.CityLayer;
 import layers.PipesLayer;
 import layers.WiresLayer;
 import org.jetbrains.annotations.NotNull;
-import other.Game;
+import main.Game;
 
 import java.util.Random;
 
 public class UrbanizationSystem {
 
-    private static Random random = new Random();
+    private static final ManagedInfrastructure road = InfrastructureManager.INSTANCE.getInfrastructure("ROAD", ManagedInfrastructure.class);
+    private static final UnmanagedInfrastructure housingArea = InfrastructureManager.INSTANCE.getInfrastructure("HOUSING_AREA", UnmanagedInfrastructure.class);
+    private static final UnmanagedInfrastructure commercialArea = InfrastructureManager.INSTANCE.getInfrastructure("COMMERCIAL_AREA", UnmanagedInfrastructure.class);
+    private static final UnmanagedInfrastructure industrialArea = InfrastructureManager.INSTANCE.getInfrastructure("INDUSTRIAL_AREA", UnmanagedInfrastructure.class);
 
-    private Game game;
+    private static final Random random = new Random();
+
+    private final Game game;
 
 
     public UrbanizationSystem(@NotNull Game game) {
@@ -56,7 +61,7 @@ public class UrbanizationSystem {
             for (int x = 0; x < cityMap.getWidth(); x++) {
 
                 // Build only if close to road and with access to water pipes and electric wires
-                if (cityMap.neighbours(x, y, ManagedInfrastructure.ROAD) &&
+                if (cityMap.neighbours(x, y, road) &&
                         pipesMap.neighbours(x, y, true) &&
                         wiresMap.neighbours(x, y, true)) {
 
@@ -64,20 +69,20 @@ public class UrbanizationSystem {
                     UnmanagedBuilding unmanagedBuilding;
 
                     // Choose appropriate building
-                    if (area == UnmanagedInfrastructure.HOUSING_AREA) {
+                    if (area == housingArea) {
                         unmanagedBuilding = switch (random.nextInt(2)) {
-                            case 0 -> House.HOUSE_1;
-                            default -> House.HOUSE_2;
+                            case 0 -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_1", UnmanagedBuilding.class);
+                            default -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_2", UnmanagedBuilding.class);
                         };
 
-                    } else if (area == UnmanagedInfrastructure.COMMERCIAL_AREA) {
+                    } else if (area == commercialArea) {
                         unmanagedBuilding = switch (random.nextInt(2)) {
-                            case 0 -> CommercialBuilding.SHOP_1;
-                            default -> CommercialBuilding.SHOP_2;
+                            case 0 -> InfrastructureManager.INSTANCE.getInfrastructure("SHOP_1", UnmanagedBuilding.class);
+                            default -> InfrastructureManager.INSTANCE.getInfrastructure("SHOP_2", UnmanagedBuilding.class);
                         };
 
-                    } else if (area == UnmanagedInfrastructure.INDUSTRIAL_AREA) {
-                        unmanagedBuilding = IndustrialBuilding.FACTORY_1;
+                    } else if (area == industrialArea) {
+                        unmanagedBuilding = InfrastructureManager.INSTANCE.getInfrastructure("FACTORY_1", UnmanagedBuilding.class);
 
                     } else {
                         continue;
@@ -119,9 +124,9 @@ public class UrbanizationSystem {
 
                 Infrastructure area;
                 switch (unmanagedBuilding) {
-                    case House house -> area = UnmanagedInfrastructure.HOUSING_AREA;
-                    case IndustrialBuilding industrialBuilding -> area = UnmanagedInfrastructure.INDUSTRIAL_AREA; // Have to be before CommercialBuilding
-                    case CommercialBuilding commercialBuilding -> area = UnmanagedInfrastructure.COMMERCIAL_AREA;
+                    case House ignored -> area = housingArea;
+                    case CommercialBuilding ignored -> area = commercialArea;
+                    case IndustrialBuilding ignored -> area = industrialArea;
                     default -> {
                         continue;
                     }

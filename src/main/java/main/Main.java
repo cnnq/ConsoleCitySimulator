@@ -1,3 +1,5 @@
+package main;
+
 import gui.GameWindow;
 
 public class Main {

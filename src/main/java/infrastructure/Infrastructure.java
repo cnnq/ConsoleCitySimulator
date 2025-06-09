@@ -1,32 +1,44 @@
 package infrastructure;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.Nullable;
-import other.Directions;
-import other.Sprite;
+import data.Directions;
+import graphics.Sprite;
 
 import java.awt.*;
 import java.util.EnumSet;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = UnmanagedInfrastructure.class, name = "unmanagedInfrastructure"),
+        @JsonSubTypes.Type(value = ManagedInfrastructure.class, name = "managedInfrastructure"),
+        @JsonSubTypes.Type(value = UnmanagedBuilding.class, name = "unmanagedBuilding"),
+        @JsonSubTypes.Type(value = ManagedBuilding.class, name = "managedBuilding"),
+        @JsonSubTypes.Type(value = House.class, name = "house"),
+        @JsonSubTypes.Type(value = CommercialBuilding.class, name = "commercialBuilding"),
+        @JsonSubTypes.Type(value = IndustrialBuilding.class, name = "industrialBuilding"),
+})
 public abstract class Infrastructure {
 
     private final Sprite sprite;
-    private final Color defaultColor;
     private final double buildingCost;
 
     /**
      * Create instance of infrastructure
      * @param sprite
-     * @param defaultColor color to display if sprite is null or null if you want transparent tile
      * @param buildingCost cost of building
      */
     protected Infrastructure(@Nullable Sprite sprite,
-                             @Nullable Color defaultColor,
                              double buildingCost) {
 
         if (buildingCost < 0) throw new IllegalArgumentException("buildingCost cannot be negative");
 
         this.sprite = sprite;
-        this.defaultColor = defaultColor;
         this.buildingCost = buildingCost;
     }
 
@@ -40,13 +52,6 @@ public abstract class Infrastructure {
     public void draw(Graphics g, int x, int y, EnumSet<Directions> neighbourData) {
         if (sprite != null) {
             sprite.draw(g, x, y, neighbourData);
-
-        } else if (defaultColor != null) {
-            int displayXPixel = x * Sprite.DEFAULT_SPRITE_SIZE;
-            int displayYPixel = y * Sprite.DEFAULT_SPRITE_SIZE;
-
-            g.setColor(defaultColor);
-            g.fillRect(displayXPixel, displayYPixel, Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE);
         }
     }
 

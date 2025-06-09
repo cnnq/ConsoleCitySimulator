@@ -1,39 +1,28 @@
 package infrastructure;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.Nullable;
-import other.Sprite;
-
-import java.awt.*;
+import graphics.Sprite;
 
 /**
  * Infrastructure managed by government
  */
 public class ManagedInfrastructure extends Infrastructure {
 
-    private static final double DEFAULT_ROAD_PRICE = 10;
-    private static final double DEFAULT_PIPE_PRICE = 1;
-    private static final double DEFAULT_WIRE_PRICE = 1;
-
-    // ====
-    public static final ManagedInfrastructure ROAD = new ManagedInfrastructure(Sprite.ROAD, Color.BLACK, DEFAULT_ROAD_PRICE, 0.1);
-    public static final ManagedInfrastructure PIPES = new ManagedInfrastructure(Sprite.PIPES, Color.GRAY, DEFAULT_PIPE_PRICE, 0);
-    public static final ManagedInfrastructure WIRES = new ManagedInfrastructure(null, Color.YELLOW, DEFAULT_WIRE_PRICE, 0);
-
-
     private final double maintenanceCost;
 
     /**
      * Create instance of government managed infrastructure
      * @param sprite
-     * @param defaultColor color to display if sprite is null or null if you want transparent tile
      * @param buildingCost cost of building
      * @param maintenanceCost cost of maintaining an infrastructure
      */
-    protected ManagedInfrastructure(@Nullable Sprite sprite,
-                                    @Nullable Color defaultColor,
-                                    double buildingCost, double maintenanceCost) {
+    @JsonCreator
+    protected ManagedInfrastructure(@JsonProperty("sprite") @Nullable Sprite sprite,
+                                    @JsonProperty("buildingCost") double buildingCost, @JsonProperty("maintenanceCost") double maintenanceCost) {
 
-        super(sprite, defaultColor, buildingCost);
+        super(sprite, buildingCost);
 
         if (maintenanceCost < 0) throw new IllegalArgumentException("maintenanceCost cannot be negative");
 

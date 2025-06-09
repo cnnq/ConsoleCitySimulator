@@ -2,9 +2,9 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import other.Game;
-import other.PerlinNoise;
-import other.Sprite;
+import main.Game;
+import graphics.PerlinNoise;
+import graphics.Sprite;
 
 import java.awt.*;
 import java.util.Random;

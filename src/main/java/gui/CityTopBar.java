@@ -1,13 +1,11 @@
 package gui;
 
 import data.PopulationStats;
-import infrastructure.ManagedBuilding;
-import infrastructure.ManagedInfrastructure;
-import infrastructure.UnmanagedBuilding;
-import infrastructure.Infrastructure;
+import graphics.Sprite;
+import infrastructure.*;
+import main.Game;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
-import other.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,19 +33,17 @@ public class CityTopBar extends TopBar {
     public CityTopBar(@NotNull EditMode editMode) {
         super(editMode);
 
-        choosenInfrastructure = ManagedInfrastructure.ROAD;
+        choosenInfrastructure = InfrastructureManager.INSTANCE.getInfrastructure("ROAD");
 
         // === Buttons ===
-        roadButton = new JButton(Sprite.STRAIGHT_HORIZONTAL_ROAD);
+        roadButton = new JButton(Sprite.ROAD_ICON);
+        housingAreaButton = new JButton(Sprite.HOUSING_AREA_ICON);
+        commercialAreaButton = new JButton(Sprite.COMMERCIAL_AREA_ICON);
+        industrialAreaButton = new JButton(Sprite.INDUSTRIAL_AREA_ICON);
+        solarPanelButton = new JButton(Sprite.SOLAR_PANELS_ICON);
+        waterPumpButton = new JButton(Sprite.WATER_PUMP_ICON);
 
-        housingAreaButton = new JButton(Sprite.HOUSE_2);
-        commercialAreaButton = new JButton(Sprite.SHOP_1);
-        industrialAreaButton = new JButton(Sprite.FACTORY_1);
-
-        solarPanelButton = new JButton(Sprite.SOLAR_PANELS);
-        waterPumpButton = new JButton(Sprite.WATER_PUMP);
-
-        // Set preferred sizes
+        // Set preferred size
         roadButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
         housingAreaButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
         commercialAreaButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
@@ -55,30 +51,21 @@ public class CityTopBar extends TopBar {
         solarPanelButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
         waterPumpButton.setPreferredSize(new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE));
 
+        // Get elements
+        var road = InfrastructureManager.INSTANCE.getInfrastructure("ROAD");
+        var housingArea = InfrastructureManager.INSTANCE.getInfrastructure("HOUSING_AREA");
+        var commercialArea = InfrastructureManager.INSTANCE.getInfrastructure("COMMERCIAL_AREA");
+        var industrialArea = InfrastructureManager.INSTANCE.getInfrastructure("INDUSTRIAL_AREA");
+        var solarPanels = InfrastructureManager.INSTANCE.getInfrastructure("SOLAR_PANELS");
+        var waterPump = InfrastructureManager.INSTANCE.getInfrastructure("WATER_PUMP");
+
         // Add action listeners
-        roadButton.addActionListener(e -> {
-            choosenInfrastructure = ManagedInfrastructure.ROAD;
-        });
-
-        housingAreaButton.addActionListener(e -> {
-            choosenInfrastructure = UnmanagedBuilding.HOUSING_AREA;
-        });
-
-        commercialAreaButton.addActionListener(e -> {
-            choosenInfrastructure = UnmanagedBuilding.COMMERCIAL_AREA;
-        });
-
-        industrialAreaButton.addActionListener(e -> {
-            choosenInfrastructure = UnmanagedBuilding.INDUSTRIAL_AREA;
-        });
-
-        solarPanelButton.addActionListener(e -> {
-            choosenInfrastructure = ManagedBuilding.SOLAR_PANELS;
-        });
-
-        waterPumpButton.addActionListener(e -> {
-            choosenInfrastructure = ManagedBuilding.WATER_PUMP;
-        });
+        roadButton.addActionListener(e -> { choosenInfrastructure = road; });
+        housingAreaButton.addActionListener(e -> { choosenInfrastructure = housingArea; });
+        commercialAreaButton.addActionListener(e -> { choosenInfrastructure = commercialArea; });
+        industrialAreaButton.addActionListener(e -> { choosenInfrastructure = industrialArea; });
+        solarPanelButton.addActionListener(e -> { choosenInfrastructure = solarPanels; });
+        waterPumpButton.addActionListener(e -> { choosenInfrastructure = waterPump; });
 
         // Add components
         add(roadButton);
@@ -88,7 +75,8 @@ public class CityTopBar extends TopBar {
         add(solarPanelButton);
         add(waterPumpButton);
 
-        // === Labels ===
+
+        // === Tax slider ===
         taxLabel = new JLabel("Tax: error", JLabel.CENTER);
         taxSlider = new JSlider(JSlider.HORIZONTAL, 0, TAX_STEPS, TAX_STEPS / 10);
 
@@ -99,6 +87,7 @@ public class CityTopBar extends TopBar {
         add(taxLabel);
         add(taxSlider);
 
+        // === Labels ===
         populationLabel = new JLabel("Population: error", JLabel.CENTER);
         moneyLabel = new JLabel("Money: error", JLabel.CENTER);
 

@@ -1,14 +1,17 @@
 package layers;
 
+import infrastructure.InfrastructureManager;
 import infrastructure.ManagedInfrastructure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import other.Game;
+import main.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class PipesLayer implements Layer<Boolean> {
+
+    private static final ManagedInfrastructure pipes = InfrastructureManager.INSTANCE.getInfrastructure("PIPES", ManagedInfrastructure.class);
 
     private final int width;
     private final int height;
@@ -41,7 +44,7 @@ public class PipesLayer implements Layer<Boolean> {
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
                 if (get(x + xOffset, y + yOffset)) {
-                    ManagedInfrastructure.PIPES.draw(g, x, y, getNeighbourData(x + xOffset, y + yOffset, true));
+                    pipes.draw(g, x, y, getNeighbourData(x + xOffset, y + yOffset, true));
                 }
             }
         }
@@ -59,7 +62,7 @@ public class PipesLayer implements Layer<Boolean> {
                     rectangle.width = 0;
                 }
 
-                double price = ManagedInfrastructure.PIPES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
+                double price = pipes.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
 
                 if (game.getMoney() < price) return false;
 

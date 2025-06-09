@@ -1,13 +1,14 @@
 package layers;
 
 import gui.CityTopBar;
+import infrastructure.InfrastructureManager;
 import infrastructure.UnmanagedInfrastructure;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import infrastructure.Infrastructure;
-import other.Directions;
-import other.Game;
+import data.Directions;
+import main.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -32,7 +33,9 @@ public class CityLayer implements Layer<Infrastructure> {
         this.height = game.getMapWidth();
         buffer = new Infrastructure[width][height];
 
-        TopographyLayer topography = game.getTopographyMap();
+        var water = InfrastructureManager.INSTANCE.getInfrastructure("WATER", UnmanagedInfrastructure.class);
+
+        var topography = game.getTopographyMap();
 
         // Fill with water
         for (int x = 0; x < width; x++) {
@@ -40,7 +43,7 @@ public class CityLayer implements Layer<Infrastructure> {
                 double h = topography.get(x, y);
 
                 if (h <= topography.getWaterLevel()) {
-                    set(x, y, UnmanagedInfrastructure.WATER);
+                    set(x, y, water);
                 }
             }
         }

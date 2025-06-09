@@ -1,13 +1,13 @@
-package other;
+package main;
 
 import data.ElectricityStats;
 import data.PopulationStats;
 import data.WaterStats;
 import gui.GameWindow;
 import infrastructure.Building;
-import infrastructure.UnmanagedBuilding;
 import infrastructure.House;
 import infrastructure.Infrastructure;
+import infrastructure.InfrastructureManager;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
 import systems.UrbanizationSystem;
@@ -70,6 +70,8 @@ public class Game {
 
         money = DEFAULT_MONEY;
         tax = DEFAULT_TAX;
+
+        InfrastructureManager.INSTANCE.getInfrastructure("ROAD");
     }
 
     /**

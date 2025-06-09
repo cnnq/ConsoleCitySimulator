@@ -3,7 +3,7 @@ package modes;
 import gui.*;
 import layers.Layer;
 import org.jetbrains.annotations.NotNull;
-import other.Game;
+import main.Game;
 
 import java.awt.*;
 

@@ -3,7 +3,7 @@ package gui;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
 import data.ElectricityStats;
-import other.Game;
+import main.Game;
 
 import javax.swing.*;
 import java.awt.*;

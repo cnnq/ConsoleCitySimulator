@@ -2,7 +2,7 @@ package layers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import other.Directions;
+import data.Directions;
 
 import java.awt.*;
 import java.util.EnumSet;

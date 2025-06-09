@@ -2,7 +2,7 @@ package gui;
 
 import org.jetbrains.annotations.NotNull;
 import modes.EditMode;
-import other.Sprite;
+import graphics.Sprite;
 
 import javax.swing.*;
 import java.awt.*;

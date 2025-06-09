@@ -1,7 +1,10 @@
-package other;
+package graphics;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
+import data.Directions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,21 +14,14 @@ public class Sprite implements Icon {
 
     public static final int DEFAULT_SPRITE_SIZE = 32;
 
-    public static final Sprite STRAIGHT_HORIZONTAL_ROAD = new Sprite(Spritemap.DEFAULT, 10, 0, false);
+    public static final Sprite ROAD_ICON = new Sprite(Spritemap.DEFAULT, 10, 0, false);
 
-    public static final Sprite ROAD = new Sprite(Spritemap.DEFAULT, 0, 0, true);
-    public static final Sprite PIPES = new Sprite(Spritemap.DEFAULT, 0, 1, true);
+    public static final Sprite HOUSING_AREA_ICON = new Sprite(1, 4, false);
+    public static final Sprite COMMERCIAL_AREA_ICON = new Sprite(0, 5, false);
+    public static final Sprite INDUSTRIAL_AREA_ICON = new Sprite(0, 6, false);
 
-    public static final Sprite SOLAR_PANELS = new Sprite(Spritemap.DEFAULT, 0, 2, false);
-    public static final Sprite WATER_PUMP = new Sprite(Spritemap.DEFAULT, 1, 2, false);
-
-    public static final Sprite HOUSE_1 = new Sprite(Spritemap.DEFAULT, 0, 3, false);
-    public static final Sprite HOUSE_2 = new Sprite(Spritemap.DEFAULT, 1, 3, false);
-
-    public static final Sprite SHOP_1 = new Sprite(Spritemap.DEFAULT, 0, 4, false);
-    public static final Sprite SHOP_2 = new Sprite(Spritemap.DEFAULT, 1, 4, false);
-
-    public static final Sprite FACTORY_1 = new Sprite(Spritemap.DEFAULT, 0, 5, false);
+    public static final Sprite SOLAR_PANELS_ICON = new Sprite(3, 3, false);
+    public static final Sprite WATER_PUMP_ICON = new Sprite(4, 3, false);
 
 
     private final Spritemap spritemap;
@@ -37,8 +33,8 @@ public class Sprite implements Icon {
     /**
      * Create instance of sprite
      * @param spritemap from which sprite should be taken
-     * @param x tile coordinate in spritemap
-     * @param y tile coordinate in spritemap
+     * @param x tile coordinate
+     * @param y tile coordinate
      * @param neighbourDependent true if it's look should differ depending on neighbouring sprites
      */
     public Sprite(@NotNull Spritemap spritemap, @Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, boolean neighbourDependent) {
@@ -46,6 +42,20 @@ public class Sprite implements Icon {
         this.spritemapX = x;
         this.spritemapY = y;
         this.neighbourDependent = neighbourDependent;
+    }
+
+    /**
+     * Create instance of sprite
+     * @param x tile coordinate
+     * @param y tile coordinate
+     * @param neighbourDependent true if it's look should differ depending on neighbouring sprites
+     */
+    @JsonCreator
+    public Sprite(@JsonProperty("x") @Range(from = 0, to = Integer.MAX_VALUE) int x,
+                  @JsonProperty("y") @Range(from = 0, to = Integer.MAX_VALUE) int y,
+                  @JsonProperty("neighbourDependent") boolean neighbourDependent) {
+
+        this(Spritemap.DEFAULT, x, y, neighbourDependent);
     }
 
     /**
