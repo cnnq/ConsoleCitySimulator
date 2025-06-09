@@ -1,6 +1,7 @@
 package layers;
 
 import gui.CityTopBar;
+import infrastructure.UnmanagedInfrastructure;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -39,7 +40,7 @@ public class CityLayer implements Layer<Infrastructure> {
                 double h = topography.get(x, y);
 
                 if (h <= topography.getWaterLevel()) {
-                    set(x, y, Infrastructure.WATER);
+                    set(x, y, UnmanagedInfrastructure.WATER);
                 }
             }
         }

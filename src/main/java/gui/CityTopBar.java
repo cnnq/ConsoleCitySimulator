@@ -1,7 +1,9 @@
 package gui;
 
 import data.PopulationStats;
-import infrastructure.Building;
+import infrastructure.ManagedBuilding;
+import infrastructure.ManagedInfrastructure;
+import infrastructure.UnmanagedBuilding;
 import infrastructure.Infrastructure;
 import modes.EditMode;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +35,7 @@ public class CityTopBar extends TopBar {
     public CityTopBar(@NotNull EditMode editMode) {
         super(editMode);
 
-        choosenInfrastructure = Infrastructure.ROAD;
+        choosenInfrastructure = ManagedInfrastructure.ROAD;
 
         // === Buttons ===
         roadButton = new JButton(Sprite.STRAIGHT_HORIZONTAL_ROAD);
@@ -55,27 +57,27 @@ public class CityTopBar extends TopBar {
 
         // Add action listeners
         roadButton.addActionListener(e -> {
-            choosenInfrastructure = Infrastructure.ROAD;
+            choosenInfrastructure = ManagedInfrastructure.ROAD;
         });
 
         housingAreaButton.addActionListener(e -> {
-            choosenInfrastructure = Infrastructure.HOUSING_AREA;
+            choosenInfrastructure = UnmanagedBuilding.HOUSING_AREA;
         });
 
         commercialAreaButton.addActionListener(e -> {
-            choosenInfrastructure = Infrastructure.COMMERCIAL_AREA;
+            choosenInfrastructure = UnmanagedBuilding.COMMERCIAL_AREA;
         });
 
         industrialAreaButton.addActionListener(e -> {
-            choosenInfrastructure = Infrastructure.INDUSTRIAL_AREA;
+            choosenInfrastructure = UnmanagedBuilding.INDUSTRIAL_AREA;
         });
 
         solarPanelButton.addActionListener(e -> {
-            choosenInfrastructure = Building.SOLAR_PANELS;
+            choosenInfrastructure = ManagedBuilding.SOLAR_PANELS;
         });
 
         waterPumpButton.addActionListener(e -> {
-            choosenInfrastructure = Building.WATER_PUMP;
+            choosenInfrastructure = ManagedBuilding.WATER_PUMP;
         });
 
         // Add components

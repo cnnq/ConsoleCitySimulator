@@ -1,8 +1,8 @@
 package layers;
 
+import infrastructure.ManagedInfrastructure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import infrastructure.Infrastructure;
 import other.Game;
 
 import java.awt.*;
@@ -41,7 +41,7 @@ public class WiresLayer implements Layer<Boolean> {
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
                 if (get(x + xOffset, y + yOffset)) {
-                    Infrastructure.WIRES.draw(g, x, y, getNeighbourData(x + xOffset, y + yOffset, true));
+                    ManagedInfrastructure.WIRES.draw(g, x, y, getNeighbourData(x + xOffset, y + yOffset, true));
                 }
             }
         }
@@ -58,7 +58,7 @@ public class WiresLayer implements Layer<Boolean> {
                     rectangle.width = 0;
                 }
 
-                double price = Infrastructure.WIRES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
+                double price = ManagedInfrastructure.WIRES.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
 
                 if (game.getMoney() < price) return false;
 

@@ -7,37 +7,16 @@ import other.Sprite;
 import java.awt.*;
 import java.util.EnumSet;
 
-public class Infrastructure {
-
-    // Prices in thousands of dollars
-    private static final double DEFAULT_ROAD_PRICE = 10;
-
-    protected static final double DEFAULT_HOUSING_AREA_PRICE = 10;
-    protected static final double DEFAULT_COMMERCIAL_AREA_PRICE = 5;
-    protected static final double DEFAULT_INDUSTRIAL_AREA_PRICE = 10;
-
-    private static final double DEFAULT_PIPE_PRICE = 1;
-    private static final double DEFAULT_WIRE_PRICE = 1;
-
-    public static final Infrastructure WATER = new Infrastructure(null, 0);
-    public static final Infrastructure HOUSING_AREA = new Infrastructure(new Color(40, 240, 80), DEFAULT_HOUSING_AREA_PRICE);
-    public static final Infrastructure COMMERCIAL_AREA = new Infrastructure(new Color(40, 200, 200), DEFAULT_COMMERCIAL_AREA_PRICE);
-    public static final Infrastructure INDUSTRIAL_AREA = new Infrastructure(new Color(150, 180, 40), DEFAULT_INDUSTRIAL_AREA_PRICE);
-
-    public static final Infrastructure ROAD = new Infrastructure(Sprite.ROAD, Color.BLACK, DEFAULT_ROAD_PRICE);
-    public static final Infrastructure PIPES = new Infrastructure(Sprite.PIPES, Color.GRAY, DEFAULT_PIPE_PRICE);
-    public static final Infrastructure WIRES = new Infrastructure(Color.YELLOW, DEFAULT_WIRE_PRICE);
-
+public abstract class Infrastructure {
 
     private final Sprite sprite;
-    private Color defaultColor;
-
-    private double buildingCost;
+    private final Color defaultColor;
+    private final double buildingCost;
 
     /**
      * Create instance of infrastructure
      * @param sprite
-     * @param defaultColor color to display if spritemap is null, null if transparent
+     * @param defaultColor color to display if sprite is null or null if you want transparent tile
      * @param buildingCost cost of building
      */
     protected Infrastructure(@Nullable Sprite sprite,
@@ -48,17 +27,7 @@ public class Infrastructure {
 
         this.sprite = sprite;
         this.defaultColor = defaultColor;
-
         this.buildingCost = buildingCost;
-    }
-
-    /**
-     * Create instance of infrastructure
-     * @param defaultColor color to display instead of texture, null if transparent
-     * @param buildingCost cost of building
-     */
-    private Infrastructure(@Nullable Color defaultColor, double buildingCost) {
-        this(null, defaultColor, buildingCost);
     }
 
     /**

@@ -56,42 +56,42 @@ public class UrbanizationSystem {
             for (int x = 0; x < cityMap.getWidth(); x++) {
 
                 // Build only if close to road and with access to water pipes and electric wires
-                if (cityMap.neighbours(x, y, Infrastructure.ROAD) &&
+                if (cityMap.neighbours(x, y, ManagedInfrastructure.ROAD) &&
                         pipesMap.neighbours(x, y, true) &&
                         wiresMap.neighbours(x, y, true)) {
 
                     Infrastructure area = cityMap.get(x, y);
-                    Building building;
+                    UnmanagedBuilding unmanagedBuilding;
 
                     // Choose appropriate building
-                    if (area == Infrastructure.HOUSING_AREA) {
-                        building = switch (random.nextInt(2)) {
+                    if (area == UnmanagedInfrastructure.HOUSING_AREA) {
+                        unmanagedBuilding = switch (random.nextInt(2)) {
                             case 0 -> House.HOUSE_1;
                             default -> House.HOUSE_2;
                         };
 
-                    } else if (area == Infrastructure.COMMERCIAL_AREA) {
-                        building = switch (random.nextInt(2)) {
+                    } else if (area == UnmanagedInfrastructure.COMMERCIAL_AREA) {
+                        unmanagedBuilding = switch (random.nextInt(2)) {
                             case 0 -> CommercialBuilding.SHOP_1;
                             default -> CommercialBuilding.SHOP_2;
                         };
 
-                    } else if (area == Infrastructure.INDUSTRIAL_AREA) {
-                        building = IndustrialBuilding.FACTORY_1;
+                    } else if (area == UnmanagedInfrastructure.INDUSTRIAL_AREA) {
+                        unmanagedBuilding = IndustrialBuilding.FACTORY_1;
 
                     } else {
                         continue;
                     }
 
                     // Build only if building won't use too much water or electricity
-                    if (waterStats.usage() + building.getWaterUsage() <= waterStats.production() &&
-                            electricityStats.usage() + building.getElectricityUsage() <= electricityStats.production()) {
+                    if (waterStats.usage() + unmanagedBuilding.getWaterUsage() <= waterStats.production() &&
+                            electricityStats.usage() + unmanagedBuilding.getElectricityUsage() <= electricityStats.production()) {
 
-                        cityMap.set(x, y, building);
+                        cityMap.set(x, y, unmanagedBuilding);
 
                         // Update stats
-                        waterStats = new WaterStats(waterStats.usage() + building.getWaterUsage(), waterStats.production());
-                        electricityStats = new ElectricityStats(electricityStats.usage() + building.getElectricityUsage(), electricityStats.production());
+                        waterStats = new WaterStats(waterStats.usage() + unmanagedBuilding.getWaterUsage(), waterStats.production());
+                        electricityStats = new ElectricityStats(electricityStats.usage() + unmanagedBuilding.getElectricityUsage(), electricityStats.production());
 
                         if (waterStats.usage() >= waterStats.production() || electricityStats.usage() >= electricityStats.production()) {
                             // Resource usage maxed out - no need to iterate
@@ -115,13 +115,13 @@ public class UrbanizationSystem {
             for (int x = 0; x < cityMap.getWidth(); x++) {
 
                 Infrastructure current = cityMap.get(x, y);
-                if(!(current instanceof Building building)) continue;
+                if(!(current instanceof UnmanagedBuilding unmanagedBuilding)) continue;
 
                 Infrastructure area;
-                switch (building) {
-                    case House house -> area = Infrastructure.HOUSING_AREA;
-                    case CommercialBuilding commercialBuilding -> area = Infrastructure.COMMERCIAL_AREA;
-                    case IndustrialBuilding industrialBuilding -> area = Infrastructure.INDUSTRIAL_AREA;
+                switch (unmanagedBuilding) {
+                    case House house -> area = UnmanagedInfrastructure.HOUSING_AREA;
+                    case IndustrialBuilding industrialBuilding -> area = UnmanagedInfrastructure.INDUSTRIAL_AREA; // Have to be before CommercialBuilding
+                    case CommercialBuilding commercialBuilding -> area = UnmanagedInfrastructure.COMMERCIAL_AREA;
                     default -> {
                         continue;
                     }
@@ -130,8 +130,8 @@ public class UrbanizationSystem {
                 cityMap.set(x, y, area);
 
                 // Update stats
-                waterStats = new WaterStats(waterStats.usage() - building.getWaterUsage(), waterStats.production());
-                electricityStats = new ElectricityStats(electricityStats.usage() - building.getElectricityUsage(), electricityStats.production());
+                waterStats = new WaterStats(waterStats.usage() - unmanagedBuilding.getWaterUsage(), waterStats.production());
+                electricityStats = new ElectricityStats(electricityStats.usage() - unmanagedBuilding.getElectricityUsage(), electricityStats.production());
 
                 // Resource usage stabilized - no need to iterate
                 if (waterStats.usage() <= waterStats.production() && electricityStats.usage() <= electricityStats.production()) {

@@ -6,11 +6,11 @@ import other.Sprite;
 
 import java.awt.*;
 
-public class IndustrialBuilding extends Building {
+public class IndustrialBuilding extends CommercialBuilding {
 
-    public static final IndustrialBuilding FACTORY_1 = new IndustrialBuilding(Sprite.FACTORY_1, Color.GRAY, DEFAULT_INDUSTRIAL_AREA_PRICE, 5, 5, 8);
+    public static final IndustrialBuilding FACTORY_1 = new IndustrialBuilding(Sprite.FACTORY_1, Color.GRAY, DEFAULT_INDUSTRIAL_AREA_PRICE, 10, 5, 5, 8, 2);
 
-    public double income;
+    private final double pollutionLevel;
 
     /**
      * Create instance of commercial building
@@ -20,14 +20,22 @@ public class IndustrialBuilding extends Building {
      * @param waterUsage usage of water, negative values mean production
      * @param electricityUsage usage of electricity, negative values mean production
      * @param income money that building earn
+     * @param pollutionLevel how much building pollute environment
      */
     protected IndustrialBuilding(@Nullable Sprite sprite,
                                  @Nullable Color defaultColor,
-                                 double buildingCost, double waterUsage, double electricityUsage,
-                                 @Range(from = 0, to = Integer.MAX_VALUE) int income) {
+                                 double buildingCost,
+                                 @Range(from = 0, to = Integer.MAX_VALUE) int capacity,
+                                 double waterUsage, double electricityUsage,
+                                 double income,
+                                 double pollutionLevel) {
 
-        super(sprite, defaultColor, buildingCost, waterUsage, electricityUsage);
+        super(sprite, defaultColor, buildingCost, capacity, waterUsage, electricityUsage, income);
 
-        this.income = income;
+        this.pollutionLevel = pollutionLevel;
+    }
+
+    public double getPollutionLevel() {
+        return pollutionLevel;
     }
 }

@@ -5,6 +5,7 @@ import data.PopulationStats;
 import data.WaterStats;
 import gui.GameWindow;
 import infrastructure.Building;
+import infrastructure.UnmanagedBuilding;
 import infrastructure.House;
 import infrastructure.Infrastructure;
 import layers.*;
