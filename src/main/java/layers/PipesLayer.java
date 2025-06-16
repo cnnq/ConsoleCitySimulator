@@ -1,5 +1,6 @@
 package layers;
 
+import graphics.Sprite;
 import infrastructure.InfrastructureManager;
 import infrastructure.ManagedInfrastructure;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,9 @@ import main.Game;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+/**
+ * Layer which store stores data about water pipes
+ */
 public class PipesLayer implements Layer<Boolean> {
 
     private static final ManagedInfrastructure pipes = InfrastructureManager.INSTANCE.getInfrastructure("PIPES", ManagedInfrastructure.class);
@@ -38,8 +42,8 @@ public class PipesLayer implements Layer<Boolean> {
         int minX = Math.max(0, -xOffset);
         int minY = Math.max(0, -yOffset);
 
-        int maxX = Math.min(width, this.width - xOffset);
-        int maxY = Math.min(height, this.height - yOffset);
+        int maxX = Math.min(width / Sprite.DEFAULT_SPRITE_SIZE + 1, this.width - xOffset);
+        int maxY = Math.min(height / Sprite.DEFAULT_SPRITE_SIZE + 1, this.height - yOffset);
 
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
@@ -64,10 +68,10 @@ public class PipesLayer implements Layer<Boolean> {
 
                 double price = pipes.getBuildingCost() * (rectangle.width + 1) * (rectangle.height + 1);
 
-                if (game.getMoney() < price) return false;
+                if (game.getFinancialSystem().getMoney() < price) return false;
 
                 fill(rectangle, true);
-                game.setMoney(game.getMoney() - price);
+                game.getFinancialSystem().spendMoney(price);
                 return true;
 
             case MouseEvent.BUTTON3:

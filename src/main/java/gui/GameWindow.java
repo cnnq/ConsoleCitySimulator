@@ -1,16 +1,10 @@
 package gui;
 
 import org.jetbrains.annotations.NotNull;
-import modes.EditMode;
-import modes.GameMode;
 import main.Game;
 
 import javax.swing.*;
-import java.awt.*;
 
-/**
- * Instance of one game session
- */
 public class GameWindow extends JFrame implements Runnable {
 
     public static final int DEFAULT_WIDTH = 512 + 256;
@@ -28,6 +22,7 @@ public class GameWindow extends JFrame implements Runnable {
     public GameWindow() {
         super("Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
         running = true;
 
@@ -70,13 +65,6 @@ public class GameWindow extends JFrame implements Runnable {
 
             lastTime += targetNanos;
         }
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        g.setColor(Color.PINK);
-        g.clearRect(0, 0, WIDTH, HEIGHT);
-        super.paint(g);
     }
 
     @NotNull

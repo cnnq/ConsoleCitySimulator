@@ -9,6 +9,9 @@ import graphics.Sprite;
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * Layer which store topography data
+ */
 public class TopographyLayer implements Layer<Double> {
 
     private final int width;
@@ -60,11 +63,11 @@ public class TopographyLayer implements Layer<Double> {
     public void draw(Graphics g, int xOffset, int yOffset, int width, int height) {
 
         // Clamp to not draw out of bounds
-        int minX = Math.max(-1, -xOffset);
-        int minY = Math.max(-1, -yOffset);
+        int minX = Math.max(0, -xOffset);
+        int minY = Math.max(0, -yOffset);
 
-        int maxX = Math.min(width, this.width - xOffset - 1);
-        int maxY = Math.min(height, this.height - yOffset - 1);
+        int maxX = Math.min(width / Sprite.DEFAULT_SPRITE_SIZE + 1, this.width - xOffset - 1);
+        int maxY = Math.min(height / Sprite.DEFAULT_SPRITE_SIZE + 1, this.height - yOffset - 1);
 
         for (int displayedTileX = minX; displayedTileX < maxX; displayedTileX++) {
             for (int displayedTileY = minY; displayedTileY < maxY; displayedTileY++) {

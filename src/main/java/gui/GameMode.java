@@ -1,4 +1,4 @@
-package modes;
+package gui;
 
 import org.jetbrains.annotations.NotNull;
 

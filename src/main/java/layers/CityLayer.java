@@ -1,10 +1,12 @@
 package layers;
 
+import graphics.Sprite;
 import gui.CityTopBar;
 import infrastructure.InfrastructureManager;
 import infrastructure.UnmanagedInfrastructure;
-import modes.EditMode;
+import gui.EditMode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import infrastructure.Infrastructure;
 import data.Directions;
@@ -14,6 +16,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.EnumSet;
 
+/**
+ * Layer which store infrastructure data
+ */
 public class CityLayer implements Layer<Infrastructure> {
 
     private final Game game;
@@ -23,9 +28,6 @@ public class CityLayer implements Layer<Infrastructure> {
     protected Infrastructure[][] buffer;
 
 
-    /**
-     * Generate map of terrain
-     */
     public CityLayer(@NotNull Game game) {
         this.game = game;
 
@@ -57,8 +59,8 @@ public class CityLayer implements Layer<Infrastructure> {
         int minX = Math.max(0, -xOffset);
         int minY = Math.max(0, -yOffset);
 
-        int maxX = Math.min(width, this.width - xOffset);
-        int maxY = Math.min(height, this.height - yOffset);
+        int maxX = Math.min(width / Sprite.DEFAULT_SPRITE_SIZE + 1, this.width - xOffset);
+        int maxY = Math.min(height / Sprite.DEFAULT_SPRITE_SIZE + 1, this.height - yOffset);
 
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
@@ -78,7 +80,7 @@ public class CityLayer implements Layer<Infrastructure> {
     @Override
     public boolean edit(@NotNull Rectangle rectangle, int button) {
         if(!(game.getGameWindow().getGameMode() instanceof EditMode editMode)) return false;
-        if(!(editMode.getTopBar() instanceof CityTopBar topBar)) return false;
+        if(!(editMode.getTopBar().getCurrentTopBarInstance() instanceof CityTopBar topBar)) return false;
 
         Infrastructure infrastructure = topBar.getChoosenInfrastructure();
 
@@ -105,21 +107,21 @@ public class CityLayer implements Layer<Infrastructure> {
 
         double price = infrastructure.getBuildingCost() * count(rectangle, null);
 
-        if (game.getMoney() < price) return false;
+        if (game.getFinancialSystem().getMoney() < price) return false;
 
         replace(rectangle, null, infrastructure);
-        game.setMoney(game.getMoney() - price);
+        game.getFinancialSystem().spendMoney(price);
         return true;
     }
 
 
     @Override
-    public Infrastructure get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
+    public @Nullable Infrastructure get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
         return buffer[x][y];
     }
 
     @Override
-    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, Infrastructure value) {
+    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, @Nullable Infrastructure value) {
         buffer[x][y] = value;
     }
 

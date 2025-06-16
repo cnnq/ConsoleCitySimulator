@@ -11,7 +11,11 @@ import main.Game;
 
 import java.util.Random;
 
-public class UrbanizationSystem {
+/**
+ * System that simulates citizens building and destroying their owned infrastructure
+ * @see UnmanagedBuilding
+ */
+public class UrbanizationSystem implements GameSystem {
 
     private static final ManagedInfrastructure road = InfrastructureManager.INSTANCE.getInfrastructure("ROAD", ManagedInfrastructure.class);
     private static final UnmanagedInfrastructure housingArea = InfrastructureManager.INSTANCE.getInfrastructure("HOUSING_AREA", UnmanagedInfrastructure.class);
@@ -28,15 +32,16 @@ public class UrbanizationSystem {
     }
 
     /**
-     * Update city population
+     * Update city urbanization
      * @param deltaTime time in seconds
      */
+    @Override
     public void update(float deltaTime) {
 
         WaterStats waterStats = game.getWaterStats();
         ElectricityStats electricityStats = game.getElectricityStats();
 
-        // TODO destroy houses if have no access
+        // TODO destroy houses if have no access to media
 
         // Build only if there is enough resources
         if (waterStats.usage() < waterStats.production() && electricityStats.usage() < electricityStats.production()) {

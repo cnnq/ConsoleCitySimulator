@@ -1,6 +1,5 @@
-package modes;
+package gui;
 
-import gui.*;
 import layers.Layer;
 import org.jetbrains.annotations.NotNull;
 import main.Game;
@@ -8,7 +7,7 @@ import main.Game;
 import java.awt.*;
 
 /**
- * Game mode that allows to edit layers
+ * Game mode that allows editing layers
  */
 public class EditMode extends GameMode {
 
@@ -29,19 +28,15 @@ public class EditMode extends GameMode {
         Container container = new Container();
         container.setPreferredSize(new Dimension(GameWindow.DEFAULT_WIDTH, GameWindow.DEFAULT_HEIGHT));
 
-        FlowLayout layout = new FlowLayout();
-        layout.setHgap(0);
-        layout.setVgap(0);
+        container.setLayout(new BorderLayout());
 
-        container.setLayout(layout);
-
-        topBar = new CityTopBar(this);
+        topBar = new TopBar(this);
         map = new MapPanel(this);
         bottomBar = new BottomBar(this);
 
-        container.add(topBar);
-        container.add(map);
-        container.add(bottomBar);
+        container.add(topBar, BorderLayout.NORTH);
+        container.add(map, BorderLayout.CENTER);
+        container.add(bottomBar, BorderLayout.SOUTH);
 
         setContentPane(container);
     }
@@ -49,19 +44,6 @@ public class EditMode extends GameMode {
     @NotNull
     public Game getGame() {
         return game;
-    }
-
-    public void setTopBar(@NotNull TopBar topBar) {
-        Container container = getContentPane();
-        container.remove(this.topBar);
-        container.add(topBar, 0);
-        container.revalidate();
-        this.topBar = topBar;
-    }
-
-    @NotNull
-    public TopBar getTopBar() {
-        return topBar;
     }
 
     /**
@@ -78,5 +60,10 @@ public class EditMode extends GameMode {
      */
     public void setLayer(@NotNull Layer layer) {
         this.layer = layer;
+    }
+
+    @NotNull
+    public TopBar getTopBar() {
+        return topBar;
     }
 }

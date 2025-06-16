@@ -10,6 +10,7 @@ import infrastructure.Infrastructure;
 import infrastructure.InfrastructureManager;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
+import systems.FinancialSystem;
 import systems.UrbanizationSystem;
 
 import java.util.Random;
@@ -22,11 +23,6 @@ public class Game {
     public static final int DEFAULT_MAP_SIZE = 200;
     public static final int DEFAULT_CELL_SIZE = 64;
     public static final double DEFAULT_WATER_LEVEL = 0.45;
-
-    // Prices in thousands of dollars
-    public static final double DEFAULT_MONEY = 1000;
-    public static final double DEFAULT_TAX = 0.1;
-    private static final double MINIMAL_WAGE = 1;
 
     //
     private static final double MIGRATION_FACTOR = 1;
@@ -44,15 +40,13 @@ public class Game {
     private final WiresLayer wiresMap;
 
     // Systems
-    UrbanizationSystem urbanizationSystem;
+    private final UrbanizationSystem urbanizationSystem;
+    private final FinancialSystem financialSystem;
 
     // Data
-    private double money;
     private int population;
 
-    private double tax;
-
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
 
     public Game(@NotNull GameWindow gameWindow) {
@@ -67,9 +61,7 @@ public class Game {
         wiresMap = new WiresLayer(this);
 
         urbanizationSystem = new UrbanizationSystem(this);
-
-        money = DEFAULT_MONEY;
-        tax = DEFAULT_TAX;
+        financialSystem = new FinancialSystem(this);
 
         InfrastructureManager.INSTANCE.getInfrastructure("ROAD");
     }
@@ -91,8 +83,8 @@ public class Game {
         if (populationStats.population() > populationStats.capacity()) population -= actualMigrationFactor;
         if (populationStats.population() < populationStats.capacity()) population += actualMigrationFactor;
 
-        // Gather taxes
-        money += deltaTime * population * MINIMAL_WAGE / 30.5 * tax;
+        // Taxes and spending
+        financialSystem.update(deltaTime);
     }
 
     public GameWindow getGameWindow() {
@@ -107,6 +99,7 @@ public class Game {
         return mapHeight;
     }
 
+    // Layers
 
     public TopographyLayer getTopographyMap() {
         return topographyMap;
@@ -124,23 +117,17 @@ public class Game {
         return wiresMap;
     }
 
+    // Systems
 
-    public double getMoney() {
-        return money;
+    public UrbanizationSystem getUrbanizationSystem() {
+        return urbanizationSystem;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
+    public FinancialSystem getFinancialSystem() {
+        return financialSystem;
     }
 
-    public double getTax() {
-        return tax;
-    }
-
-    public void setTax(double tax) {
-        this.tax = tax;
-    }
-
+    // Stats
 
     public WaterStats getWaterStats() {
         double usage = 0;

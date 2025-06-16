@@ -1,23 +1,51 @@
 package gui;
 
 import org.jetbrains.annotations.NotNull;
-import modes.EditMode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
-public abstract class TopBar extends JMenuBar {
+/**
+ * Upper element of the GUI which supports interactions witch the simulation.
+ * {@link BottomBar} can change its appearance by switching current {@link TopBarInstance}.
+ */
+public class TopBar extends JPanel {
 
-    private static final int TOP_BAR_HEIGHT = 32;
+    private final HashMap<String, TopBarInstance> instances;
+    private TopBarInstance currentInstance;
+
+    private final CardLayout layout;
 
     private final EditMode editMode;
 
 
     public TopBar(@NotNull EditMode editMode) {
-        setPreferredSize(new Dimension(GameWindow.DEFAULT_WIDTH, TOP_BAR_HEIGHT));
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
         this.editMode = editMode;
+
+        layout = new CardLayout();
+        setLayout(layout);
+
+        instances = new HashMap<>();
+        instances.put("CITY", new CityTopBar(this));
+        instances.put("PIPES", new PipesTopBar(this));
+        instances.put("WIRES", new WiresTopBar(this));
+
+        for(var entry : instances.entrySet()) {
+            add(entry.getKey(), entry.getValue());
+        }
+
+        setCurrentTopBarInstance("CITY");
+    }
+
+    @NotNull
+    public TopBarInstance getCurrentTopBarInstance() {
+        return currentInstance;
+    }
+
+    public void setCurrentTopBarInstance(@NotNull String name) {
+        currentInstance = instances.get(name);
+        layout.show(this, name);
     }
 
     @NotNull

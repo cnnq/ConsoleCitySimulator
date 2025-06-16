@@ -1,7 +1,6 @@
 package gui;
 
 import org.jetbrains.annotations.NotNull;
-import modes.EditMode;
 import graphics.Sprite;
 
 import javax.swing.*;
@@ -9,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Pane on which map will be drawn
+ * Pane which displays layers and manages user interactions with them
  */
 public class MapPanel extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -20,8 +19,6 @@ public class MapPanel extends JPanel implements MouseListener, MouseMotionListen
 
 
     public MapPanel(@NotNull EditMode editMode) {
-        setPreferredSize(new Dimension(GameWindow.DEFAULT_WIDTH, GameWindow.DEFAULT_HEIGHT - 64));
-
         this.editMode = editMode;
 
         // Set view to center of the map
@@ -40,7 +37,7 @@ public class MapPanel extends JPanel implements MouseListener, MouseMotionListen
         super.paintComponent(g);
 
         // Draw layer
-        editMode.getLayer().draw(g, xOffset, yOffset, getWidth() / Sprite.DEFAULT_SPRITE_SIZE, getHeight() / Sprite.DEFAULT_SPRITE_SIZE);
+        editMode.getLayer().draw(g, xOffset, yOffset, getWidth(), getHeight());
 
         // Draw selected area
         if (selectionFrom != null && selectionTo != null) {
