@@ -67,7 +67,7 @@ public class FinancialSystem implements GameSystem {
             }
         }
 
-        int population = game.getPopulationStats().population();
+        int population = game.getMigrationSystem().getPopulationStats().population();
 
         // Gather taxes
         double taxes = 0;

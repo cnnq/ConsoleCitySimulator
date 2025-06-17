@@ -11,24 +11,24 @@ import java.awt.*;
  */
 class CityTopBarTaxSliders extends JPanel {
 
-    public static int TAX_STEPS = 20;
+    public static int TAX_STEPS = 100;
 
     public CityTopBarTaxSliders(@NotNull CityTopBar cityTopBar) {
         setLayout(new GridLayout(2, 3));
 
         // Labels
-        JLabel perCapitaTaxLabel = new JLabel("Per capita tax: " + 100 / TAX_STEPS + "% ", JLabel.CENTER);
-        JLabel commercialTaxLabel = new JLabel("Commercial tax: " + 100 / TAX_STEPS + "% ", JLabel.CENTER);
-        JLabel industrialTaxLabel = new JLabel("Industrial tax: " + 100 / TAX_STEPS + "% ", JLabel.CENTER);
+        JLabel perCapitaTaxLabel = new JLabel("Per capita tax: " + FinancialSystem.DEFAULT_TAX * 100 + "% ", JLabel.CENTER);
+        JLabel commercialTaxLabel = new JLabel("Commercial tax: " + FinancialSystem.DEFAULT_TAX * 100 + "% ", JLabel.CENTER);
+        JLabel industrialTaxLabel = new JLabel("Industrial tax: " + FinancialSystem.DEFAULT_TAX * 100 + "% ", JLabel.CENTER);
 
         add(perCapitaTaxLabel);
         add(commercialTaxLabel);
         add(industrialTaxLabel);
 
         // Sliders
-        JSlider perCapitaTaxSlider = new JSlider(0, TAX_STEPS, TAX_STEPS / 10);
-        JSlider commercialTaxSlider = new JSlider(0, TAX_STEPS, TAX_STEPS / 10);
-        JSlider industrialTaxSlider = new JSlider(0, TAX_STEPS, TAX_STEPS / 10);
+        JSlider perCapitaTaxSlider = new JSlider(0, TAX_STEPS, (int)(FinancialSystem.DEFAULT_TAX * TAX_STEPS));
+        JSlider commercialTaxSlider = new JSlider(0, TAX_STEPS, (int)(FinancialSystem.DEFAULT_TAX * TAX_STEPS));
+        JSlider industrialTaxSlider = new JSlider(0, TAX_STEPS, (int)(FinancialSystem.DEFAULT_TAX * TAX_STEPS));
 
         FinancialSystem financialSystem = cityTopBar.getTopBar().getEditMode().getGame().getFinancialSystem();
 

@@ -25,10 +25,11 @@ public class UrbanizationSystem implements GameSystem {
     private static final Random random = new Random();
 
     private final Game game;
-
+    private final CityLayer cityMap;
 
     public UrbanizationSystem(@NotNull Game game) {
         this.game = game;
+        this.cityMap = game.getCityMap();
     }
 
     /**
@@ -37,9 +38,8 @@ public class UrbanizationSystem implements GameSystem {
      */
     @Override
     public void update(float deltaTime) {
-
-        WaterStats waterStats = game.getWaterStats();
-        ElectricityStats electricityStats = game.getElectricityStats();
+        WaterStats waterStats = getWaterStats();
+        ElectricityStats electricityStats = getElectricityStats();
 
         // TODO destroy houses if have no access to media
 
@@ -58,7 +58,6 @@ public class UrbanizationSystem implements GameSystem {
      * @param electricityStats
      */
     private void build(@NotNull WaterStats waterStats, @NotNull ElectricityStats electricityStats) {
-        CityLayer cityMap = game.getCityMap();
         PipesLayer pipesMap = game.getPipesMap();
         WiresLayer wiresMap = game.getWiresMap();
 
@@ -119,8 +118,6 @@ public class UrbanizationSystem implements GameSystem {
      * @param electricityStats
      */
     private void destroy(@NotNull WaterStats waterStats, @NotNull ElectricityStats electricityStats) {
-        CityLayer cityMap = game.getCityMap();
-
         for (int y = 0; y < cityMap.getHeight(); y++) {
             for (int x = 0; x < cityMap.getWidth(); x++) {
 
@@ -150,4 +147,41 @@ public class UrbanizationSystem implements GameSystem {
             }
         }
     }
+
+    public WaterStats getWaterStats() {
+        double usage = 0;
+        double production = 0;
+
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
+                Infrastructure infrastructure = cityMap.get(x, y);
+                if(!(infrastructure instanceof Building building)) continue;
+
+                double waterUsage = building.getWaterUsage();
+
+                if (waterUsage > 0) usage += waterUsage;
+                else production -= waterUsage;
+            }
+        }
+        return new WaterStats(usage, production);
+    }
+
+    public ElectricityStats getElectricityStats() {
+        double usage = 0;
+        double production = 0;
+
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
+                Infrastructure infrastructure = cityMap.get(x, y);
+                if (!(infrastructure instanceof Building building)) continue;
+
+                double electricityUsage = building.getElectricityUsage();
+
+                if (electricityUsage > 0) usage += electricityUsage;
+                else production -= electricityUsage;
+            }
+        }
+        return new ElectricityStats(usage, production);
+    }
+
 }

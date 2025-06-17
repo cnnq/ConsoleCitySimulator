@@ -29,7 +29,7 @@ public class PipesTopBar extends TopBarInstance {
     @Override
     public void paint(Graphics g) {
         Game game = getTopBar().getEditMode().getGame();
-        WaterStats waterStats = game.getWaterStats();
+        WaterStats waterStats = game.getUrbanizationSystem().getWaterStats();
 
         waterStatsLabel.setText("Usage: " + String.format("%.1f", waterStats.usage()) + " / " + String.format("%.1f", waterStats.production()));
         moneyLabel.setText("Money: " + String.format("%.1f", game.getFinancialSystem().getMoney())  + "k $");

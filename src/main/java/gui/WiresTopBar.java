@@ -29,7 +29,7 @@ public class WiresTopBar extends TopBarInstance {
     @Override
     public void paint(Graphics g) {
         Game game = getTopBar().getEditMode().getGame();
-        ElectricityStats electricityStats = game.getElectricityStats();
+        ElectricityStats electricityStats = game.getUrbanizationSystem().getElectricityStats();
 
         electricityStatsLabel.setText("Usage: " + String.format("%.1f", electricityStats.usage()) + " / " + String.format("%.1f", electricityStats.production()));
         moneyLabel.setText("Money: " + String.format("%.1f", game.getFinancialSystem().getMoney()) + "k $");

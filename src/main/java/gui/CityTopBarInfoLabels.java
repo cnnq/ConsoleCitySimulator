@@ -40,7 +40,7 @@ class CityTopBarInfoLabels extends JPanel {
     @Override
     public void paint(Graphics g) {
         Game game = cityTopBar.getTopBar().getEditMode().getGame();
-        PopulationStats populationStats = game.getPopulationStats();
+        PopulationStats populationStats = game.getMigrationSystem().getPopulationStats();
 
         populationLabel.setText(populationStats.population() + " / " + populationStats.capacity());
         moneyLabel.setText(String.format("%.1f", game.getFinancialSystem().getMoney()) + "k $");

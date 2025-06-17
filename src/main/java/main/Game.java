@@ -1,19 +1,11 @@
 package main;
 
-import data.ElectricityStats;
-import data.PopulationStats;
-import data.WaterStats;
 import gui.GameWindow;
-import infrastructure.Building;
-import infrastructure.House;
-import infrastructure.Infrastructure;
-import infrastructure.InfrastructureManager;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
 import systems.FinancialSystem;
+import systems.MigrationSystem;
 import systems.UrbanizationSystem;
-
-import java.util.Random;
 
 /**
  * Instance of currently loaded game
@@ -24,10 +16,7 @@ public class Game {
     public static final int DEFAULT_CELL_SIZE = 64;
     public static final double DEFAULT_WATER_LEVEL = 0.45;
 
-    //
-    private static final double MIGRATION_FACTOR = 1;
-
-    //
+    // Window
     private final GameWindow gameWindow;
 
     private final int mapWidth;
@@ -41,12 +30,8 @@ public class Game {
 
     // Systems
     private final UrbanizationSystem urbanizationSystem;
+    private final MigrationSystem migrationSystem;
     private final FinancialSystem financialSystem;
-
-    // Data
-    private int population;
-
-    private static final Random random = new Random();
 
 
     public Game(@NotNull GameWindow gameWindow) {
@@ -61,9 +46,8 @@ public class Game {
         wiresMap = new WiresLayer(this);
 
         urbanizationSystem = new UrbanizationSystem(this);
+        migrationSystem = new MigrationSystem(this);
         financialSystem = new FinancialSystem(this);
-
-        InfrastructureManager.INSTANCE.getInfrastructure("ROAD");
     }
 
     /**
@@ -71,22 +55,12 @@ public class Game {
      * @param deltaTime time in seconds
      */
     public void update(float deltaTime) {
-
-        // Build / destroy houses
         urbanizationSystem.update(deltaTime);
-
-        // Migration
-        PopulationStats populationStats = getPopulationStats();
-
-        int actualMigrationFactor = (int)MIGRATION_FACTOR + (random.nextDouble() < (MIGRATION_FACTOR - Math.floor(MIGRATION_FACTOR)) ? 1 : 0);
-
-        if (populationStats.population() > populationStats.capacity()) population -= actualMigrationFactor;
-        if (populationStats.population() < populationStats.capacity()) population += actualMigrationFactor;
-
-        // Taxes and spending
+        migrationSystem.update(deltaTime);
         financialSystem.update(deltaTime);
     }
 
+    @NotNull
     public GameWindow getGameWindow() {
         return gameWindow;
     }
@@ -101,81 +75,41 @@ public class Game {
 
     // Layers
 
+    @NotNull
     public TopographyLayer getTopographyMap() {
         return topographyMap;
     }
 
+    @NotNull
     public CityLayer getCityMap() {
         return cityMap;
     }
 
+    @NotNull
     public PipesLayer getPipesMap() {
         return pipesMap;
     }
 
+    @NotNull
     public WiresLayer getWiresMap() {
         return wiresMap;
     }
 
     // Systems
 
+    @NotNull
     public UrbanizationSystem getUrbanizationSystem() {
         return urbanizationSystem;
     }
 
+    @NotNull
+    public MigrationSystem getMigrationSystem() {
+        return migrationSystem;
+    }
+
+    @NotNull
     public FinancialSystem getFinancialSystem() {
         return financialSystem;
     }
 
-    // Stats
-
-    public WaterStats getWaterStats() {
-        double usage = 0;
-        double production = 0;
-
-        for (int x = 0; x < cityMap.getWidth(); x++) {
-            for (int y = 0; y < cityMap.getHeight(); y++) {
-                Infrastructure infrastructure = cityMap.get(x, y);
-                if(!(infrastructure instanceof Building building)) continue;
-
-                double waterUsage = building.getWaterUsage();
-
-                if (waterUsage > 0) usage += waterUsage;
-                else production -= waterUsage;
-            }
-        }
-        return new WaterStats(usage, production);
-    }
-
-    public ElectricityStats getElectricityStats() {
-        double usage = 0;
-        double production = 0;
-
-        for (int x = 0; x < cityMap.getWidth(); x++) {
-            for (int y = 0; y < cityMap.getHeight(); y++) {
-                Infrastructure infrastructure = cityMap.get(x, y);
-                if (!(infrastructure instanceof Building building)) continue;
-
-                double electricityUsage = building.getElectricityUsage();
-
-                if (electricityUsage > 0) usage += electricityUsage;
-                else production -= electricityUsage;
-            }
-        }
-        return new ElectricityStats(usage, production);
-    }
-
-    public PopulationStats getPopulationStats() {
-        int capacity = 0;
-
-        for (int x = 0; x < cityMap.getWidth(); x++) {
-            for (int y = 0; y < cityMap.getHeight(); y++) {
-                Infrastructure infrastructure = cityMap.get(x, y);
-                if (!(infrastructure instanceof House house)) continue;
-
-                capacity += house.getCapacity();
-            }
-        }
-        return new PopulationStats(population, capacity);
-    }
 }
