@@ -97,6 +97,7 @@ public class UrbanizationSystem implements GameSystem {
                             electricityStats.usage() + unmanagedBuilding.getElectricityUsage() <= electricityStats.production()) {
 
                         cityMap.set(x, y, unmanagedBuilding);
+                        game.getEconomySystem().raiseConcretePrice(1);
 
                         // Update stats
                         waterStats = new WaterStats(waterStats.usage() + unmanagedBuilding.getWaterUsage(), waterStats.production());

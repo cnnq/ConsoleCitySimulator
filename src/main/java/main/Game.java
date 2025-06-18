@@ -3,6 +3,7 @@ package main;
 import gui.GameWindow;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
+import systems.EconomySystem;
 import systems.FinancialSystem;
 import systems.MigrationSystem;
 import systems.UrbanizationSystem;
@@ -31,6 +32,7 @@ public class Game {
     // Systems
     private final UrbanizationSystem urbanizationSystem;
     private final MigrationSystem migrationSystem;
+    private final EconomySystem economySystem;
     private final FinancialSystem financialSystem;
 
 
@@ -47,6 +49,7 @@ public class Game {
 
         urbanizationSystem = new UrbanizationSystem(this);
         migrationSystem = new MigrationSystem(this);
+        economySystem = new EconomySystem(this);
         financialSystem = new FinancialSystem(this);
     }
 
@@ -57,6 +60,7 @@ public class Game {
     public void update(float deltaTime) {
         urbanizationSystem.update(deltaTime);
         migrationSystem.update(deltaTime);
+        economySystem.update(deltaTime);
         financialSystem.update(deltaTime);
     }
 
@@ -105,6 +109,11 @@ public class Game {
     @NotNull
     public MigrationSystem getMigrationSystem() {
         return migrationSystem;
+    }
+
+    @NotNull
+    public EconomySystem getEconomySystem() {
+        return economySystem;
     }
 
     @NotNull
