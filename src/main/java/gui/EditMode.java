@@ -13,7 +13,7 @@ public class EditMode extends GameMode {
 
     private final Game game;
 
-    private TopBar topBar;
+    private final TopBar topBar;
     private final MapPanel map;
     private final BottomBar bottomBar;
 

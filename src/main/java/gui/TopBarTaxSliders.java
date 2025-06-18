@@ -7,13 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Manages tax sliders used only by {@link CityTopBar}
+ * Manages tax sliders used only by {@link TopBar}
  */
-class CityTopBarTaxSliders extends JPanel {
+class TopBarTaxSliders extends JPanel {
 
     public static int TAX_STEPS = 100;
 
-    public CityTopBarTaxSliders(@NotNull CityTopBar cityTopBar) {
+    public TopBarTaxSliders(@NotNull TopBar topBar) {
         setLayout(new GridLayout(2, 3));
 
         // Labels
@@ -30,7 +30,7 @@ class CityTopBarTaxSliders extends JPanel {
         JSlider commercialTaxSlider = new JSlider(0, TAX_STEPS, (int)(FinancialSystem.DEFAULT_TAX * TAX_STEPS));
         JSlider industrialTaxSlider = new JSlider(0, TAX_STEPS, (int)(FinancialSystem.DEFAULT_TAX * TAX_STEPS));
 
-        FinancialSystem financialSystem = cityTopBar.getTopBar().getEditMode().getGame().getFinancialSystem();
+        FinancialSystem financialSystem = topBar.getEditMode().getGame().getFinancialSystem();
 
         perCapitaTaxSlider.addChangeListener(e -> {
             double newTax = (double)perCapitaTaxSlider.getValue() / TAX_STEPS;

@@ -30,6 +30,7 @@ public class TopBar extends JPanel {
         instances.put("CITY", new CityTopBar(this));
         instances.put("PIPES", new PipesTopBar(this));
         instances.put("WIRES", new WiresTopBar(this));
+        instances.put("ECONOMY", new EconomyTopBar(this));
 
         for(var entry : instances.entrySet()) {
             add(entry.getKey(), entry.getValue());
@@ -44,6 +45,7 @@ public class TopBar extends JPanel {
     }
 
     public void setCurrentTopBarInstance(@NotNull String name) {
+        if(!instances.containsKey(name)) throw new IllegalArgumentException("Unknown top bar instance: " + name);
         currentInstance = instances.get(name);
         layout.show(this, name);
     }

@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Manages labels used only by {@link CityTopBar}
+ * Manages labels used only by {@link TopBar}
  */
-class CityTopBarInfoLabels extends JPanel {
+class TopBarInfoLabels extends JPanel {
 
     private final JLabel populationStringLabel;
     private final JLabel moneyStringLabel;
@@ -18,10 +18,11 @@ class CityTopBarInfoLabels extends JPanel {
     private final JLabel populationLabel;
     private final JLabel moneyLabel;
 
-    private final CityTopBar cityTopBar;
+    private final TopBar topBar;
 
-    public CityTopBarInfoLabels(@NotNull CityTopBar cityTopBar) {
-        this.cityTopBar = cityTopBar;
+
+    public TopBarInfoLabels(@NotNull TopBar topBar) {
+        this.topBar = topBar;
 
         setLayout(new GridLayout(2, 2));
 
@@ -39,7 +40,7 @@ class CityTopBarInfoLabels extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        Game game = cityTopBar.getTopBar().getEditMode().getGame();
+        Game game = topBar.getEditMode().getGame();
         PopulationStats populationStats = game.getMigrationSystem().getPopulationStats();
 
         populationLabel.setText(populationStats.population() + " / " + populationStats.capacity());

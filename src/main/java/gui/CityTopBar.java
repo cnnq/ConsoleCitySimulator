@@ -17,11 +17,9 @@ public class CityTopBar extends TopBarInstance {
         super(topBar);
 
         var buildButtons = new CityTopBarBuildButtons(this);
-        var taxSliders = new CityTopBarTaxSliders(this);
-        var infoLabels = new CityTopBarInfoLabels(this);
+        var infoLabels = new TopBarInfoLabels(topBar);
 
         add(buildButtons, BorderLayout.WEST);
-        add(taxSliders, BorderLayout.CENTER);
         add(infoLabels, BorderLayout.EAST);
 
         choosenInfrastructure = InfrastructureManager.INSTANCE.getInfrastructure("ROAD");

@@ -12,18 +12,17 @@ import java.awt.*;
  */
 public class PipesTopBar extends TopBarInstance {
 
-    private JLabel waterStatsLabel;
-    private JLabel moneyLabel;
+    private final JLabel waterStatsLabel;
 
 
     public PipesTopBar(@NotNull TopBar topBar) {
         super(topBar);
 
         waterStatsLabel = new JLabel("Usage: error", JLabel.CENTER);
-        moneyLabel = new JLabel("Money: error", JLabel.CENTER);
+        var infoLabels = new TopBarInfoLabels(topBar);
 
         add(waterStatsLabel, BorderLayout.WEST);
-        add(moneyLabel, BorderLayout.EAST);
+        add(infoLabels, BorderLayout.EAST);
     }
 
     @Override
@@ -32,7 +31,6 @@ public class PipesTopBar extends TopBarInstance {
         WaterStats waterStats = game.getUrbanizationSystem().getWaterStats();
 
         waterStatsLabel.setText("Usage: " + String.format("%.1f", waterStats.usage()) + " / " + String.format("%.1f", waterStats.production()));
-        moneyLabel.setText("Money: " + String.format("%.1f", game.getFinancialSystem().getMoney())  + "k $");
 
         super.paint(g);
     }

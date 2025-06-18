@@ -12,18 +12,17 @@ import java.awt.*;
  */
 public class WiresTopBar extends TopBarInstance {
 
-    private JLabel electricityStatsLabel;
-    private JLabel moneyLabel;
+    private final JLabel electricityStatsLabel;
 
 
     public WiresTopBar(@NotNull TopBar topBar) {
         super(topBar);
 
         electricityStatsLabel = new JLabel("Usage: error", JLabel.CENTER);
-        moneyLabel = new JLabel("Money: error", JLabel.CENTER);
+        var infoLabels = new TopBarInfoLabels(topBar);
 
         add(electricityStatsLabel, BorderLayout.WEST);
-        add(moneyLabel, BorderLayout.EAST);
+        add(infoLabels, BorderLayout.EAST);
     }
 
     @Override
@@ -32,7 +31,6 @@ public class WiresTopBar extends TopBarInstance {
         ElectricityStats electricityStats = game.getUrbanizationSystem().getElectricityStats();
 
         electricityStatsLabel.setText("Usage: " + String.format("%.1f", electricityStats.usage()) + " / " + String.format("%.1f", electricityStats.production()));
-        moneyLabel.setText("Money: " + String.format("%.1f", game.getFinancialSystem().getMoney()) + "k $");
 
         super.paint(g);
     }

@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * Bottom part of GUI used to swap {@link TopBar} functionality
  */
-public class BottomBar extends JPanel {
+class BottomBar extends JPanel {
 
     public BottomBar(@NotNull EditMode editMode) {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -16,6 +16,7 @@ public class BottomBar extends JPanel {
         JButton cityEditButton = new JButton("Edit city");
         JButton pipesEditButton = new JButton("Edit pipes");
         JButton wiresEditButton = new JButton("Edit wires");
+        JButton economyButton = new JButton("Economy");
 
         cityEditButton.addActionListener(e -> {
             editMode.getTopBar().setCurrentTopBarInstance("CITY");
@@ -32,8 +33,13 @@ public class BottomBar extends JPanel {
             editMode.setLayer(editMode.getGame().getWiresMap());
         });
 
+        economyButton.addActionListener(e -> {
+            editMode.getTopBar().setCurrentTopBarInstance("ECONOMY");
+        });
+
         add(cityEditButton);
         add(pipesEditButton);
         add(wiresEditButton);
+        add(economyButton);
     }
 }
