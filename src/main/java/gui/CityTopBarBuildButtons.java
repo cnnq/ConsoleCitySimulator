@@ -22,6 +22,9 @@ class CityTopBarBuildButtons extends JPanel {
         JButton industrialAreaButton = new JButton(Sprite.INDUSTRIAL_AREA_ICON);
         JButton solarPanelButton = new JButton(Sprite.SOLAR_PANELS_ICON);
         JButton waterPumpButton = new JButton(Sprite.WATER_PUMP_ICON);
+        JButton fireStationButton = new JButton(Sprite.FIRE_STATION_ICON);
+        JButton schoolButton = new JButton(Sprite.SCHOOL_ICON);
+        JButton hospitalButton = new JButton(Sprite.HOSPITAL_ICON);
 
         // Set preferred size
         Dimension spriteDimension = new Dimension(Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE);
@@ -32,13 +35,9 @@ class CityTopBarBuildButtons extends JPanel {
         industrialAreaButton.setPreferredSize(spriteDimension);
         solarPanelButton.setPreferredSize(spriteDimension);
         waterPumpButton.setPreferredSize(spriteDimension);
-
-        roadButton.setMaximumSize(spriteDimension);
-        housingAreaButton.setMaximumSize(spriteDimension);
-        commercialAreaButton.setMaximumSize(spriteDimension);
-        industrialAreaButton.setMaximumSize(spriteDimension);
-        solarPanelButton.setMaximumSize(spriteDimension);
-        waterPumpButton.setMaximumSize(spriteDimension);
+        fireStationButton.setPreferredSize(spriteDimension);
+        schoolButton.setPreferredSize(spriteDimension);
+        hospitalButton.setPreferredSize(spriteDimension);
 
         // Add action listeners
         var road = InfrastructureManager.INSTANCE.getInfrastructure("ROAD");
@@ -47,13 +46,19 @@ class CityTopBarBuildButtons extends JPanel {
         var industrialArea = InfrastructureManager.INSTANCE.getInfrastructure("INDUSTRIAL_AREA");
         var solarPanels = InfrastructureManager.INSTANCE.getInfrastructure("SOLAR_PANELS");
         var waterPump = InfrastructureManager.INSTANCE.getInfrastructure("WATER_PUMP");
+        var fireStation = InfrastructureManager.INSTANCE.getInfrastructure("FIRE_STATION");
+        var school = InfrastructureManager.INSTANCE.getInfrastructure("SCHOOL");
+        var hospital = InfrastructureManager.INSTANCE.getInfrastructure("HOSPITAL");
 
-        roadButton.addActionListener(e -> { cityTopBar.setChoosenInfrastructure(road); });
-        housingAreaButton.addActionListener(e -> { cityTopBar.setChoosenInfrastructure(housingArea); });
-        commercialAreaButton.addActionListener(e -> { cityTopBar.setChoosenInfrastructure(commercialArea); });
-        industrialAreaButton.addActionListener(e -> { cityTopBar.setChoosenInfrastructure(industrialArea); });
-        solarPanelButton.addActionListener(e -> { cityTopBar.setChoosenInfrastructure(solarPanels); });
-        waterPumpButton.addActionListener(e -> { cityTopBar.setChoosenInfrastructure(waterPump); });
+        roadButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(road));
+        housingAreaButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(housingArea));
+        commercialAreaButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(commercialArea));
+        industrialAreaButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(industrialArea));
+        solarPanelButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(solarPanels));
+        waterPumpButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(waterPump));
+        fireStationButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(fireStation));
+        schoolButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(school));
+        hospitalButton.addActionListener(e -> cityTopBar.setChoosenInfrastructure(hospital));
 
         // Add components
         add(roadButton);
@@ -62,5 +67,8 @@ class CityTopBarBuildButtons extends JPanel {
         add(industrialAreaButton);
         add(solarPanelButton);
         add(waterPumpButton);
+        add(fireStationButton);
+        add(schoolButton);
+        add(hospitalButton);
     }
 }

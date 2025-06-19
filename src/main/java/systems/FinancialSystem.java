@@ -67,7 +67,7 @@ public class FinancialSystem implements GameSystem {
             }
         }
 
-        int population = game.getMigrationSystem().getPopulationStats().population();
+        int population = game.getPopulationSystem().getPopulationStats().population();
 
         // Gather taxes
         double taxes = 0;
@@ -81,7 +81,7 @@ public class FinancialSystem implements GameSystem {
         addMoney(taxes);
 
         // Spendings
-        spendMoney(totalMaintenanceCost);
+        spendMoney(totalMaintenanceCost  / AVERAGE_MONTH * deltaTime);
     }
 
     public double getMoney() {

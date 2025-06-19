@@ -70,7 +70,7 @@
       "neighbourDependent" : false
     },
     "buildingCost" : 15.0,
-    "maintenanceCost" : 0.0005,
+    "maintenanceCost" : 0.1,
     "waterUsage" : 0.0,
     "electricityUsage" : -10.0
   },
@@ -83,9 +83,48 @@
       "neighbourDependent" : false
     },
     "buildingCost" : 10.0,
-    "maintenanceCost" : 0.001,
+    "maintenanceCost" : 0.1,
     "waterUsage" : -10.0,
     "electricityUsage" : 0.0
+  },
+  "FIRE_STATION" : {
+    "type" : "managedBuilding",
+    "capacity" : 4,
+    "sprite" : {
+      "x" : 5,
+      "y" : 3,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 30.0,
+    "maintenanceCost" : 2.0,
+    "waterUsage" : 5.0,
+    "electricityUsage" : 2.0
+  },
+  "SCHOOL" : {
+    "type" : "managedBuilding",
+    "capacity" : 4,
+    "sprite" : {
+      "x" : 6,
+      "y" : 3,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 25.0,
+    "maintenanceCost" : 3.0,
+    "waterUsage" : 1.0,
+    "electricityUsage" : 3.0
+  },
+  "HOSPITAL" : {
+    "type" : "managedBuilding",
+    "capacity" : 4,
+    "sprite" : {
+      "x" : 7,
+      "y" : 3,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 35.0,
+    "maintenanceCost" : 5.0,
+    "waterUsage" : 3.0,
+    "electricityUsage" : 5.0
   },
   "HOUSE_1" : {
     "type" : "house",

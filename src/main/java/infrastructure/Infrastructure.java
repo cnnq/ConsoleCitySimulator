@@ -15,13 +15,13 @@ import java.util.EnumSet;
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = UnmanagedInfrastructure.class, name = "unmanagedInfrastructure"),
-        @JsonSubTypes.Type(value = ManagedInfrastructure.class, name = "managedInfrastructure"),
-        @JsonSubTypes.Type(value = UnmanagedBuilding.class, name = "unmanagedBuilding"),
-        @JsonSubTypes.Type(value = ManagedBuilding.class, name = "managedBuilding"),
         @JsonSubTypes.Type(value = House.class, name = "house"),
         @JsonSubTypes.Type(value = CommercialBuilding.class, name = "commercialBuilding"),
         @JsonSubTypes.Type(value = IndustrialBuilding.class, name = "industrialBuilding"),
+        @JsonSubTypes.Type(value = UnmanagedBuilding.class, name = "unmanagedBuilding"),
+        @JsonSubTypes.Type(value = ManagedBuilding.class, name = "managedBuilding"),
+        @JsonSubTypes.Type(value = UnmanagedInfrastructure.class, name = "unmanagedInfrastructure"),
+        @JsonSubTypes.Type(value = ManagedInfrastructure.class, name = "managedInfrastructure"),
 })
 public abstract class Infrastructure {
 

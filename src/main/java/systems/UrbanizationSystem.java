@@ -24,6 +24,9 @@ public class UrbanizationSystem implements GameSystem {
 
     private static final Random random = new Random();
 
+    private WaterStats waterStats;
+    private ElectricityStats electricityStats;
+
     private final Game game;
     private final CityLayer cityMap;
 
@@ -50,6 +53,10 @@ public class UrbanizationSystem implements GameSystem {
         } else if (waterStats.usage() > waterStats.production() || electricityStats.usage() > electricityStats.production()) {
             destroy(waterStats, electricityStats);
         }
+
+        // Recalculate stats
+        calculateWaterStats();
+        calculateElectricityStats();
     }
 
     /**
@@ -149,7 +156,7 @@ public class UrbanizationSystem implements GameSystem {
         }
     }
 
-    public WaterStats getWaterStats() {
+    private void calculateWaterStats() {
         double usage = 0;
         double production = 0;
 
@@ -164,10 +171,11 @@ public class UrbanizationSystem implements GameSystem {
                 else production -= waterUsage;
             }
         }
-        return new WaterStats(usage, production);
+
+        waterStats = new WaterStats(usage, production);
     }
 
-    public ElectricityStats getElectricityStats() {
+    private void calculateElectricityStats() {
         double usage = 0;
         double production = 0;
 
@@ -182,7 +190,19 @@ public class UrbanizationSystem implements GameSystem {
                 else production -= electricityUsage;
             }
         }
-        return new ElectricityStats(usage, production);
+
+        electricityStats = new ElectricityStats(usage, production);
     }
 
+    @NotNull
+    public WaterStats getWaterStats() {
+        if (waterStats == null) calculateWaterStats();
+        return waterStats;
+    }
+
+    @NotNull
+    public ElectricityStats getElectricityStats() {
+        if (electricityStats == null) calculateElectricityStats();
+        return electricityStats;
+    }
 }

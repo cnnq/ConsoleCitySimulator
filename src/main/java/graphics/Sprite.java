@@ -23,6 +23,9 @@ public class Sprite implements Icon {
     public static final Sprite SOLAR_PANELS_ICON = new Sprite(3, 3, false);
     public static final Sprite WATER_PUMP_ICON = new Sprite(4, 3, false);
 
+    public static final Sprite FIRE_STATION_ICON = new Sprite(5, 3, false);
+    public static final Sprite SCHOOL_ICON = new Sprite(6, 3, false);
+    public static final Sprite HOSPITAL_ICON = new Sprite(7, 3, false);
 
     private final Spritemap spritemap;
     private final int spritemapX;

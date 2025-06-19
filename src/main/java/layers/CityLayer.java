@@ -2,13 +2,11 @@ package layers;
 
 import graphics.Sprite;
 import gui.CityTopBar;
-import infrastructure.InfrastructureManager;
-import infrastructure.UnmanagedInfrastructure;
+import infrastructure.*;
 import gui.EditMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-import infrastructure.Infrastructure;
 import data.Directions;
 import main.Game;
 
@@ -125,6 +123,38 @@ public class CityLayer implements Layer<Infrastructure> {
         buffer[x][y] = value;
     }
 
+    /**
+     * Counts all instances of given infrastructure type on the map
+     * @param infrastructure infrastructure type to be counted
+     */
+    public int calculateNumberOf(@NotNull Infrastructure infrastructure) {
+        int result = 0;
+
+        for (int x = 0; x < getWidth(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
+                if (infrastructure.equals(get(x, y))) result++;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Counts all instances of given infrastructure type on the map
+     * @param type infrastructure type to be counted
+     */
+    public <T extends Infrastructure> int calculateNumberOf(@NotNull Class<T> type) {
+        int result = 0;
+
+        for (int x = 0; x < getWidth(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
+                if (type.isInstance(get(x, y))) result++;
+            }
+        }
+
+        return result;
+    }
+
     @Override
     public int getWidth() {
         return width;
@@ -134,4 +164,5 @@ public class CityLayer implements Layer<Infrastructure> {
     public int getHeight() {
         return height;
     }
+
 }
