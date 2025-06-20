@@ -25,10 +25,8 @@ public class InfrastructureManager {
             FileReader fileReader = new FileReader(DEFAULT_INFRASTRUCTURE_PATH);
             infrastructureMap = objectMapper.readValue(fileReader, new TypeReference<>() {});
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new InfrastructureNotLoadedException(DEFAULT_INFRASTRUCTURE_PATH);
         }
     }
 

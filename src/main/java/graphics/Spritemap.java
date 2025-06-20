@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Spritemap {
 
-    private static final String DEFAULT_SPRITEMAP_PATH = "res/spritemap.png";
+    public static final String DEFAULT_SPRITEMAP_PATH = "res/spritemap.png";
 
     public static Spritemap DEFAULT = new Spritemap(DEFAULT_SPRITEMAP_PATH);
 
@@ -20,7 +20,7 @@ public class Spritemap {
         try {
             image = ImageIO.read(new File(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SpritemapNotLoadedException(path);
         }
     }
 

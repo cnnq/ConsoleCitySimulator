@@ -1,5 +1,8 @@
 package main;
 
+import graphics.Spritemap;
+import graphics.SpritemapNotLoadedException;
+import gui.GameMode;
 import gui.GameWindow;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
@@ -11,14 +14,19 @@ import systems.UrbanizationSystem;
 /**
  * Instance of currently loaded game
  */
-public class Game {
+public class Game implements Runnable {
+
+    public static final int DEFAULT_FPS = 20;
 
     public static final int DEFAULT_MAP_SIZE = 200;
     public static final int DEFAULT_CELL_SIZE = 64;
     public static final double DEFAULT_WATER_LEVEL = 0.45;
 
+
     // Window
     private final GameWindow gameWindow;
+    private Thread thread;
+    private boolean running;
 
     private final int mapWidth;
     private final int mapHeight;
@@ -36,8 +44,7 @@ public class Game {
     private final FinancialSystem financialSystem;
 
 
-    public Game(@NotNull GameWindow gameWindow) {
-        this.gameWindow = gameWindow;
+    public Game() {
 
         mapWidth = DEFAULT_MAP_SIZE;
         mapHeight = DEFAULT_MAP_SIZE;
@@ -51,6 +58,43 @@ public class Game {
         populationSystem = new PopulationSystem(this);
         economySystem = new EconomySystem(this);
         financialSystem = new FinancialSystem(this);
+
+        // Window
+        gameWindow = new GameWindow(this);
+        running = true;
+
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void run() {
+        // Repaint frame every 1/FPS ms
+
+        final int targetNanos = 1_000_000_000 / DEFAULT_FPS;
+
+        long lastTime = System.nanoTime();
+
+        // run
+        while (running) {
+
+            update(1f / DEFAULT_FPS);
+            gameWindow.repaint();
+
+            long currentTime = System.nanoTime();
+
+            // wait
+            try {
+                long timeToWait = (targetNanos - currentTime + lastTime) / 1_000_000;
+                if (timeToWait > 0) Thread.sleep(timeToWait);
+
+            } catch (InterruptedException e) {
+                running = false;
+                break;
+            }
+
+            lastTime += targetNanos;
+        }
     }
 
     /**

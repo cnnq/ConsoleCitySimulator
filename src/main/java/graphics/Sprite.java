@@ -14,7 +14,7 @@ public class Sprite implements Icon {
 
     public static final int DEFAULT_SPRITE_SIZE = 32;
 
-    public static final Sprite ROAD_ICON = new Sprite(Spritemap.DEFAULT, 10, 0, false);
+    public static final Sprite ROAD_ICON = new Sprite(10, 0, false);
 
     public static final Sprite HOUSING_AREA_ICON = new Sprite(1, 4, false);
     public static final Sprite COMMERCIAL_AREA_ICON = new Sprite(0, 5, false);
@@ -41,6 +41,9 @@ public class Sprite implements Icon {
      * @param neighbourDependent true if it's look should differ depending on neighbouring sprites
      */
     public Sprite(@NotNull Spritemap spritemap, @Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, boolean neighbourDependent) {
+        if (x < 0) throw new IllegalArgumentException("x cannot be negative");
+        if (y < 0) throw new IllegalArgumentException("y cannot be negative");
+
         this.spritemap = spritemap;
         this.spritemapX = x;
         this.spritemapY = y;
