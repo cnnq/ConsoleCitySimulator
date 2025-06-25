@@ -150,6 +150,30 @@
     "waterUsage" : 3.0,
     "electricityUsage" : 3.0
   },
+  "HOUSE_3" : {
+    "type" : "house",
+    "sprite" : {
+      "x" : 2,
+      "y" : 4,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 200.0,
+    "capacity" : 16,
+    "waterUsage" : 7.0,
+    "electricityUsage" : 7.0
+  },
+  "HOUSE_4" : {
+    "type" : "house",
+    "sprite" : {
+      "x" : 3,
+      "y" : 4,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 300.0,
+    "capacity" : 3,
+    "waterUsage" : 3.0,
+    "electricityUsage" : 4.0
+  },
   "SHOP_1" : {
     "type" : "commercialBuilding",
     "sprite" : {
@@ -176,6 +200,19 @@
     "electricityUsage" : 1.0,
     "income" : 4.0
   },
+  "OFFICE_1" : {
+    "type" : "commercialBuilding",
+    "sprite" : {
+      "x" : 2,
+      "y" : 5,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 250.0,
+    "capacity" : 12,
+    "waterUsage" : 4.0,
+    "electricityUsage" : 8.0,
+    "income" : 30.0
+  },
   "FACTORY_1" : {
     "type" : "industrialBuilding",
     "sprite" : {
@@ -189,5 +226,19 @@
     "electricityUsage" : 10.0,
     "income" : 25.0,
     "pollutionLevel" : 10.0
+  },
+  "FACTORY_2" : {
+    "type" : "industrialBuilding",
+    "sprite" : {
+      "x" : 1,
+      "y" : 6,
+      "neighbourDependent" : false
+    },
+    "buildingCost" : 300.0,
+    "capacity" : 18,
+    "waterUsage" : 8.0,
+    "electricityUsage" : 10.0,
+    "income" : 30.0,
+    "pollutionLevel" : 6.0
   }
 }

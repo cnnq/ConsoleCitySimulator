@@ -81,19 +81,25 @@ public class UrbanizationSystem implements GameSystem {
 
                     // Choose appropriate building
                     if (area == housingArea) {
-                        unmanagedBuilding = switch (random.nextInt(2)) {
+                        unmanagedBuilding = switch (random.nextInt(4)) {
                             case 0 -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_1", UnmanagedBuilding.class);
-                            default -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_2", UnmanagedBuilding.class);
+                            case 1 -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_2", UnmanagedBuilding.class);
+                            case 2 -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_3", UnmanagedBuilding.class);
+                            default -> InfrastructureManager.INSTANCE.getInfrastructure("HOUSE_4", UnmanagedBuilding.class);
                         };
 
                     } else if (area == commercialArea) {
-                        unmanagedBuilding = switch (random.nextInt(2)) {
+                        unmanagedBuilding = switch (random.nextInt(3)) {
                             case 0 -> InfrastructureManager.INSTANCE.getInfrastructure("SHOP_1", UnmanagedBuilding.class);
-                            default -> InfrastructureManager.INSTANCE.getInfrastructure("SHOP_2", UnmanagedBuilding.class);
+                            case 1 -> InfrastructureManager.INSTANCE.getInfrastructure("SHOP_2", UnmanagedBuilding.class);
+                            default -> InfrastructureManager.INSTANCE.getInfrastructure("OFFICE_1", UnmanagedBuilding.class);
                         };
 
                     } else if (area == industrialArea) {
-                        unmanagedBuilding = InfrastructureManager.INSTANCE.getInfrastructure("FACTORY_1", UnmanagedBuilding.class);
+                        unmanagedBuilding = switch (random.nextInt(2)) {
+                            case 0 -> InfrastructureManager.INSTANCE.getInfrastructure("FACTORY_1", UnmanagedBuilding.class);
+                            default -> InfrastructureManager.INSTANCE.getInfrastructure("FACTORY_2", UnmanagedBuilding.class);
+                        };
 
                     } else {
                         continue;

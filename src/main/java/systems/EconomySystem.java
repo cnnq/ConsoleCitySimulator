@@ -74,7 +74,7 @@ public class EconomySystem implements GameSystem {
 
         ElectricityStats electricityStats = urbanizationSystem.getElectricityStats();
         double electricitySaturation = electricityStats.production() != 0 ? electricityStats.usage() / electricityStats.production() : 0;
-        double electricityTargetPrice = Math.abs(electricityCurveCoefficient / (electricitySaturation - 1) + electricityCurveCoefficient + MIN_ELECTRICITY_PRICE);
+        double electricityTargetPrice = Math.abs(electricityCurveCoefficient / (electricitySaturation * 0.99 - 1) + electricityCurveCoefficient + MIN_ELECTRICITY_PRICE);
 
         electricityPrice = electricityPrice * delta + electricityTargetPrice * (1 - delta);
 
@@ -84,7 +84,7 @@ public class EconomySystem implements GameSystem {
 
         WaterStats waterStats = urbanizationSystem.getWaterStats();
         double waterSaturation = waterStats.production() != 0 ? waterStats.usage() / waterStats.production() : 0;
-        double waterTargetPrice = Math.abs(waterCurveCoefficient / (waterSaturation - 1) + waterCurveCoefficient + MIN_WATER_PRICE);
+        double waterTargetPrice = Math.abs(waterCurveCoefficient / (waterSaturation * 0.99 - 1) + waterCurveCoefficient + MIN_WATER_PRICE);
 
         waterPrice = waterPrice * delta + waterTargetPrice * (1 - delta);
 
