@@ -1,6 +1,7 @@
 package systems;
 
 import data.ElectricityStats;
+import data.ConductionState;
 import data.WaterStats;
 import infrastructure.*;
 import layers.CityLayer;
@@ -73,8 +74,8 @@ public class UrbanizationSystem implements GameSystem {
 
                 // Build only if close to road and with access to water pipes and electric wires
                 if (cityMap.neighbours(x, y, road) &&
-                        pipesMap.neighbours(x, y, true) &&
-                        wiresMap.neighbours(x, y, true)) {
+                        pipesMap.neighbours(x, y, ConductionState.Filled) &&
+                        wiresMap.neighbours(x, y, ConductionState.Filled)) {
 
                     Infrastructure area = cityMap.get(x, y);
                     UnmanagedBuilding unmanagedBuilding;

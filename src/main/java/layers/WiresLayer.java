@@ -1,5 +1,6 @@
 package layers;
 
+import data.ConductionState;
 import graphics.Sprite;
 import infrastructure.InfrastructureManager;
 import infrastructure.ManagedInfrastructure;
@@ -13,13 +14,13 @@ import java.awt.event.MouseEvent;
 /**
  * Layer which stores data about electric wires
  */
-public class WiresLayer implements Layer<Boolean> {
+public class WiresLayer implements Layer<ConductionState> {
 
     private static final ManagedInfrastructure wires = InfrastructureManager.INSTANCE.getInfrastructure("WIRES", ManagedInfrastructure.class);
 
     private final int width;
     private final int height;
-    protected boolean[][] buffer;
+    protected ConductionState[][] buffer;
 
     private final Game game;
 
@@ -29,7 +30,7 @@ public class WiresLayer implements Layer<Boolean> {
 
         this.width = game.getMapWidth();
         this.height = game.getMapHeight();
-        buffer = new boolean[width][height];
+        buffer = new ConductionState[width][height];
     }
 
 
@@ -47,8 +48,21 @@ public class WiresLayer implements Layer<Boolean> {
 
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-                if (get(x + xOffset, y + yOffset)) {
-                    wires.draw(g, x, y, getNeighbourData(x + xOffset, y + yOffset, true));
+                int xOff = x + xOffset;
+                int yOff = y + yOffset;
+
+                ConductionState tile = get(xOff, yOff);
+
+                var neighbourData = getNeighbourData(xOff, yOff, ConductionState.Empty);
+                neighbourData.addAll(getNeighbourData(xOff, yOff, ConductionState.Filled));
+
+                if (tile == ConductionState.Empty) {
+                    wires.draw(g, x, y, neighbourData);
+
+                } else if (tile == ConductionState.Filled) {
+                    g.setColor(Color.BLUE);
+                    g.fillRect(x * Sprite.DEFAULT_SPRITE_SIZE, y * Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE, Sprite.DEFAULT_SPRITE_SIZE);
+                    wires.draw(g, x, y, neighbourData);
                 }
             }
         }
@@ -69,12 +83,12 @@ public class WiresLayer implements Layer<Boolean> {
 
                 if (game.getFinancialSystem().getMoney() < price) return false;
 
-                fill(rectangle, true);
+                fill(rectangle, ConductionState.Empty);
                 game.getFinancialSystem().spendMoney(price);
                 return true;
 
             case MouseEvent.BUTTON3:
-                fill(rectangle, false);
+                fill(rectangle, null);
                 return true;
 
             default:
@@ -84,12 +98,12 @@ public class WiresLayer implements Layer<Boolean> {
 
 
     @Override
-    public Boolean get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
+    public ConductionState get(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y) {
         return buffer[x][y];
     }
 
     @Override
-    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, Boolean value) {
+    public void set(@Range(from = 0, to = Integer.MAX_VALUE) int x, @Range(from = 0, to = Integer.MAX_VALUE) int y, ConductionState value) {
         buffer[x][y] = value;
     }
 

@@ -1,15 +1,9 @@
 package main;
 
-import graphics.Spritemap;
-import graphics.SpritemapNotLoadedException;
-import gui.GameMode;
 import gui.GameWindow;
 import layers.*;
 import org.jetbrains.annotations.NotNull;
-import systems.EconomySystem;
-import systems.FinancialSystem;
-import systems.PopulationSystem;
-import systems.UrbanizationSystem;
+import systems.*;
 
 /**
  * Instance of currently loaded game
@@ -38,6 +32,7 @@ public class Game implements Runnable {
     private final WiresLayer wiresMap;
 
     // Systems
+    private final MediaSystem mediaSystem;
     private final UrbanizationSystem urbanizationSystem;
     private final PopulationSystem populationSystem;
     private final EconomySystem economySystem;
@@ -54,6 +49,7 @@ public class Game implements Runnable {
         pipesMap = new PipesLayer(this);
         wiresMap = new WiresLayer(this);
 
+        mediaSystem = new MediaSystem(this);
         urbanizationSystem = new UrbanizationSystem(this);
         populationSystem = new PopulationSystem(this);
         economySystem = new EconomySystem(this);
@@ -102,6 +98,7 @@ public class Game implements Runnable {
      * @param deltaTime time in seconds
      */
     public void update(float deltaTime) {
+        mediaSystem.update(deltaTime);
         urbanizationSystem.update(deltaTime);
         populationSystem.update(deltaTime);
         economySystem.update(deltaTime);
